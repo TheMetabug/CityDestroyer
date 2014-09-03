@@ -85,9 +85,11 @@
   <ItemGroup>
     <ClCompile Include="source\MenuScene.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\ProtoScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\MenuScene.hpp" />
+    <ClInclude Include="include\ProtoScene.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
