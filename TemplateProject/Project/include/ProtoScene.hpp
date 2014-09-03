@@ -12,7 +12,17 @@ class ProtoScene : public uth::Scene
 private: // Just place everything else as private.
 	uth::Shader m_shader;
 	uth::GameObject* m_player;
+	uth::GameObject* m_bgCity1;
+	uth::GameObject* m_bgCity2;
 	uth::Texture* m_playerTexture;
+	uth::Texture* m_bgCityTexture;
+
+	//uth::AnimatedSprite m_playerAnimation;
+	//uth::SpriteBatch* m_spriteBatch;
+
+	void inputLogic(float dt);
+	void bgMovement(float dt);
+
 public: // Every one of these public functions are required.
 	ProtoScene();
 	~ProtoScene();

@@ -3,6 +3,8 @@
 #include <UtH/Engine/UtHEngine.h>
 #include <UtH/Engine/Sprite.hpp>
 #include <UtH/Engine/AnimatedSprite.hpp>
+#include <UtH/Engine/SpriteBatch.hpp>
+#include <UtH/Platform/Input.hpp>
 #include <UtH/Platform/Debug.hpp> //WriteLog(...), works like printf.
 
 using namespace uth;
@@ -18,9 +20,22 @@ bool ProtoScene::Init()
 
 	m_playerTexture = new Texture();
 	m_playerTexture->LoadFromFile("roar.tga");
+	m_bgCityTexture = new Texture();
+	m_bgCityTexture->LoadFromFile("background.tga");
 
 	m_player = new GameObject();
-	m_player->AddComponent(new AnimatedSprite(m_playerTexture,2,umath::vector2(256,512),15));
+	m_bgCity1 = new GameObject();
+	m_bgCity2 = new GameObject();
+
+	m_player->AddComponent(new Sprite(m_playerTexture));
+	m_bgCity1->AddComponent(new Sprite(m_bgCityTexture));
+	m_bgCity2->AddComponent(new Sprite(m_bgCityTexture));
+
+	m_player->transform.SetPosition(umath::vector2(-400, 0));
+	m_bgCity1->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetSize().x / 2, 0));
+	m_bgCity2->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetPosition().x + 
+													m_bgCity1->transform.GetSize().x/2, 0));
+	//m_spriteBatch->AddSprite(m_player);
 
 	return true;
 }
@@ -35,6 +50,10 @@ bool ProtoScene::DeInit()
 // Update loop. Gone trought once per frame.
 bool ProtoScene::Update(float dt)
 {
+	inputLogic(dt);
+	bgMovement(dt);
+	m_player->Update(dt);
+	//m_spriteBatch->Update(dt);
 	return true; // Update succeeded.
 }
 
@@ -42,8 +61,11 @@ bool ProtoScene::Update(float dt)
 bool ProtoScene::Draw()
 {
 	//Background color, set this first before else
-	uthEngine.GetWindow().Clear(0.3f, 0.4f, 0, 1);
-	//m_player->Draw(uthEngine.GetWindow());
+	uthEngine.GetWindow().Clear(0, 0, 0, 1);
+	//m_spriteBatch->Draw(uthEngine.GetWindow());
+	m_bgCity1->Draw(uthEngine.GetWindow());
+	m_bgCity2->Draw(uthEngine.GetWindow());
+	m_player->Draw(uthEngine.GetWindow());
 
 
 	return true; // Drawing succeeded.
@@ -57,5 +79,33 @@ ProtoScene::ProtoScene()
 //Default deconstrutor.
 ProtoScene::~ProtoScene()
 {
+
+}
+
+void ProtoScene::inputLogic(float dt)
+{
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Left))
+	{
+		m_player->transform.Move(-100 * dt, 0);
+	}
+	else if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Right))
+	{
+		m_player->transform.Move(100 * dt, 0);
+	}
+}
+
+void ProtoScene::bgMovement(float dt)
+{
+	m_bgCity1->transform.Move(-300 * dt, 0);
+	m_bgCity2->transform.Move(-300 * dt, 0);
+
+	if (m_bgCity1->transform.GetPosition().x <= -(m_bgCity1->transform.GetSize().x))
+	{
+		m_bgCity1->transform.SetPosition(umath::vector2(m_bgCity2->transform.GetPosition().x + (m_bgCity2->transform.GetSize().x), 0));
+	}
+	if (m_bgCity2->transform.GetPosition().x <= -(m_bgCity2->transform.GetSize().x))
+	{
+		m_bgCity2->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetPosition().x + (m_bgCity1->transform.GetSize().x), 0));
+	}
 
 }
