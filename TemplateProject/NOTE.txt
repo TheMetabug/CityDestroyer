@@ -1,0 +1,1 @@
+Building android requires full source code.
