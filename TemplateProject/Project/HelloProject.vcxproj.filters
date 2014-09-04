@@ -29,4 +29,7 @@
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\frontCity.tga" />
+  </ItemGroup>
 </Project>

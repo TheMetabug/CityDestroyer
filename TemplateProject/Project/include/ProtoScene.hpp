@@ -14,8 +14,12 @@ private: // Just place everything else as private.
 	uth::GameObject* m_player;
 	uth::GameObject* m_bgCity1;
 	uth::GameObject* m_bgCity2;
+	uth::GameObject* m_frontCity;
+	uth::GameObject* m_frontCity2;
+
 	uth::Texture* m_playerTexture;
 	uth::Texture* m_bgCityTexture;
+	uth::Texture* m_frontCityTexture;
 
 	//uth::AnimatedSprite m_playerAnimation;
 	//uth::SpriteBatch* m_spriteBatch;
