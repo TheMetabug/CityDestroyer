@@ -34,7 +34,7 @@ bool ProtoScene::Init()
 	m_player->transform.SetPosition(umath::vector2(-400, 0));
 	m_bgCity1->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetSize().x / 2, 0));
 	m_bgCity2->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetPosition().x + 
-													m_bgCity1->transform.GetSize().x/2, 0));
+													m_bgCity1->transform.GetSize().x, 0));
 	//m_spriteBatch->AddSprite(m_player);
 
 	return true;
