@@ -21,12 +21,16 @@ bool ProtoScene::Init()
 	auto& playerTexture = uthRS.LoadTexture("roar.tga");
 	auto& bgCityTexture = uthRS.LoadTexture("background.tga");
 	auto& bgFrontCityTexture = uthRS.LoadTexture("frontCity.tga");
+	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
 
 	m_player.AddComponent(new Sprite(&playerTexture));
 	m_bgCity1.AddComponent(new Sprite(&bgCityTexture));
 	m_bgCity2.AddComponent(new Sprite(&bgCityTexture));
 	m_frontCity.AddComponent(new Sprite(&bgFrontCityTexture));
 	m_frontCity2.AddComponent(new Sprite(&bgFrontCityTexture));
+	m_mountain.AddComponent(new Sprite(&bgMountainTexture));
+	m_mountain2.AddComponent(new Sprite(&bgMountainTexture));
+
 
 	m_player .transform.SetPosition(umath::vector2(-400, 0));
 	m_bgCity1.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetSize().x / 2, 0));
@@ -37,6 +41,11 @@ bool ProtoScene::Init()
 	m_frontCity.transform.SetPosition(umath::vector2(  m_frontCity.transform.GetSize().x / 2, 150));
 	m_frontCity2.transform.SetPosition(umath::vector2( m_frontCity.transform.GetPosition().x +
 														m_frontCity.transform.GetSize().x, 150));
+
+
+	m_mountain.transform.SetPosition(umath::vector2(m_mountain.transform.GetSize().x / 2 -1500, 90));
+	m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x +
+		m_mountain.transform.GetSize().x, 90));
 
 
 
@@ -68,6 +77,8 @@ bool ProtoScene::Draw()
 	//Background color, set this first before else
 	uthEngine.GetWindow().Clear(0, 0, 0, 1);
 	//m_spriteBatch->Draw(uthEngine.GetWindow());
+	m_mountain.Draw(uthEngine.GetWindow());
+	m_mountain2.Draw(uthEngine.GetWindow());
 	m_bgCity1	.Draw(uthEngine.GetWindow());
 	m_bgCity2	.Draw(uthEngine.GetWindow());
 	m_player	.Draw(uthEngine.GetWindow());
@@ -106,6 +117,8 @@ void ProtoScene::bgMovement(float dt)
 	m_bgCity2   .transform.Move(-300 * dt, 0);
 	m_frontCity .transform.Move(-400 * dt, 0);
 	m_frontCity2.transform.Move(-400 * dt, 0);
+	m_mountain.transform.Move(-20 * dt, 0);
+	m_mountain2.transform.Move(-20 * dt, 0);
 
 	if (m_bgCity1.transform.GetPosition().x <= -(m_bgCity1.transform.GetSize().x))
 	{
@@ -129,5 +142,15 @@ void ProtoScene::bgMovement(float dt)
 		m_frontCity2.transform.SetPosition(umath::vector2(m_frontCity.transform.GetPosition().x + (m_frontCity.transform.GetSize().x), 150));
 	}
 
+	//////
+
+	if (m_mountain.transform.GetPosition().x <= -(m_mountain.transform.GetSize().x))
+	{
+		m_mountain.transform.SetPosition(umath::vector2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), 150));
+	}
+	if (m_mountain2.transform.GetPosition().x <= -(m_mountain2.transform.GetSize().x))
+	{
+		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), 150));
+	}
 
 }
