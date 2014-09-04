@@ -10,18 +10,23 @@
 class ProtoScene : public uth::Scene
 {
 private: // Just place everything else as private.
-	uth::Shader m_shader;
+	uth::Shader		m_shader;
 	uth::GameObject m_player;
 	uth::GameObject m_bgCity1;
 	uth::GameObject m_bgCity2;
 	uth::GameObject m_frontCity;
 	uth::GameObject m_frontCity2;
-
 	//uth::AnimatedSprite m_playerAnimation;
 	//uth::SpriteBatch* m_spriteBatch;
 
-	void inputLogic(float dt);
-	void bgMovement(float dt);
+	bool m_isPlayerJumping, m_isPlayerCrouching;
+
+	float m_playerJumpSpeed, m_playerGroundLevel;
+
+	void inputLogic	 (float dt);
+	void bgMovement	 (float dt);
+	void playerJump	 (float dt);
+	void playerCrouch(float dt);
 
 public: // Every one of these public functions are required.
 	ProtoScene();
