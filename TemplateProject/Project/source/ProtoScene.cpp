@@ -14,22 +14,23 @@ using namespace uth;
 bool ProtoScene::Init()
 {
 
-	m_playerGroundLevel = -10;
-	m_isPlayerJumping = false;
+	m_playerGroundLevel	= 300;
+	m_isPlayerJumping	= false;
 	m_isPlayerCrouching = false;
-	m_playerJumpSpeed = 0;
+	m_playerJumpSpeed	= 0;
 
 	// Some shader must be loaded and set window to use it
 	m_shader.LoadShader("Shaders/Default.vert", "Shaders/Default.frag");
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	auto& playerTexture = uthRS.LoadTexture("roar.tga");
-	auto& bgCityTexture = uthRS.LoadTexture("background.tga");
-	auto& bgFrontCityTexture = uthRS.LoadTexture("frontCity.tga");
+	auto& playerTexture		= uthRS.LoadTexture("roar.tga");
+	auto& bgCityTexture		= uthRS.LoadTexture("background.tga");
+	auto& bgFrontCityTexture= uthRS.LoadTexture("frontCity.tga");
 	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
 
 	m_player.AddComponent(new Sprite(&playerTexture));
+	m_player.transform.SetOrigin(umath::vector2(0,0.5));
 	m_bgCity1.AddComponent(new Sprite(&bgCityTexture));
 	m_bgCity2.AddComponent(new Sprite(&bgCityTexture));
 	m_frontCity.AddComponent(new Sprite(&bgFrontCityTexture));
@@ -38,7 +39,7 @@ bool ProtoScene::Init()
 	m_mountain2.AddComponent(new Sprite(&bgMountainTexture));
 
 
-	m_player.transform.SetPosition(umath::vector2(-400, m_playerGroundLevel));
+	m_player.transform.SetPosition(umath::vector2(0, m_playerGroundLevel));
 	m_bgCity1.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetSize().x / 2, 0));
 	m_bgCity2.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetPosition().x + 
 												   m_bgCity1.transform.GetSize().x, 0));
@@ -86,7 +87,7 @@ bool ProtoScene::Draw()
 {
 	//Background color, set this first before else
 	uthEngine.GetWindow().Clear(0, 0, 0, 1);
-	//m_spriteBatch->Draw(uthEngine.GetWindow());
+
 	m_mountain.Draw(uthEngine.GetWindow());
 	m_mountain2.Draw(uthEngine.GetWindow());
 	m_bgCity1	.Draw(uthEngine.GetWindow());
@@ -123,6 +124,11 @@ void ProtoScene::inputLogic(float dt)
 	{
 		m_isPlayerJumping = true;
 		m_playerJumpSpeed = -1000;
+	}
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Down) && !m_isPlayerJumping)
+	{
+		m_isPlayerCrouching = true;
+		m_playerJumpSpeed = -10;
 	}
 
 }
@@ -180,5 +186,18 @@ void ProtoScene::playerJump(float dt)
 }
 void ProtoScene::playerCrouch(float dt)
 {
+	//WriteLog(std::to_string(m_playerJumpSpeed).c_str());
+	//WriteLog("\n");
+	//m_playerJumpSpeed += 100*dt;
+	//auto speed = umath::vector2(200, m_playerJumpSpeed);
+	//m_player.transform.SetSize(speed);
+	//if (m_player.transform.GetSize().y >= 200){ m_isPlayerCrouching = false; }
 
+	WriteLog("Crouch");
+	WriteLog("\n");
+	m_isPlayerCrouching = false;
+	//WriteLog("\n");
 }
+
+
+
