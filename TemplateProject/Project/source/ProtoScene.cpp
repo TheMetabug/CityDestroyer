@@ -13,6 +13,12 @@ using namespace uth;
 // Automatically called inside SceneManager.
 bool ProtoScene::Init()
 {
+
+	m_playerGroundLevel = -10;
+	m_isPlayerJumping = false;
+	m_isPlayerCrouching = false;
+	m_playerJumpSpeed = 0;
+
 	// Some shader must be loaded and set window to use it
 
 	heliTime = 0;
@@ -38,8 +44,9 @@ bool ProtoScene::Init()
 	m_heli.AddComponent(new Sprite(&heliTexture));
 
 
-	m_player .transform.SetPosition(umath::vector2(-400, 0));
 	m_heli.transform.SetPosition(umath::vector2(600, -500));
+
+	m_player.transform.SetPosition(umath::vector2(-400, m_playerGroundLevel));
 
 	m_bgCity1.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetSize().x / 2, 0));
 	m_bgCity2.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetPosition().x + 
@@ -50,12 +57,9 @@ bool ProtoScene::Init()
 	m_frontCity2.transform.SetPosition(umath::vector2( m_frontCity.transform.GetPosition().x +
 														m_frontCity.transform.GetSize().x, 150));
 
-
-	m_mountain.transform.SetPosition(umath::vector2(m_mountain.transform.GetSize().x / 2 -1500, 90));
+	m_mountain.transform.SetPosition(umath::vector2(m_mountain.transform.GetSize().x / 2 -1500, -150));
 	m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x +
-		m_mountain.transform.GetSize().x, 90));
-
-
+		m_mountain.transform.GetSize().x, -150));
 
 	//m_spriteBatch->AddSprite(m_player);
 
@@ -73,8 +77,15 @@ bool ProtoScene::DeInit()
 bool ProtoScene::Update(float dt)
 {
 	inputLogic(dt);
+
+	//BG update things
 	bgMovement(dt);
+
+	//Player update things
 	m_player.Update(dt);
+	if (m_isPlayerJumping && !m_isPlayerCrouching)playerJump(dt);
+	if (!m_isPlayerJumping && m_isPlayerCrouching)playerCrouch(dt);
+	
 	//m_spriteBatch->Update(dt);
 	return true; // Update succeeded.
 }
@@ -114,10 +125,16 @@ void ProtoScene::inputLogic(float dt)
 	{
 		m_player.transform.Move(-100 * dt, 0);
 	}
-	else if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Right))
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Right))
 	{
 		m_player.transform.Move(100 * dt, 0);
 	}
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Up) && !m_isPlayerJumping)
+	{
+		m_isPlayerJumping = true;
+		m_playerJumpSpeed = -1000;
+	}
+
 }
 
 void ProtoScene::bgMovement(float dt)
@@ -159,14 +176,24 @@ void ProtoScene::bgMovement(float dt)
 
 	if (m_mountain.transform.GetPosition().x <= -(m_mountain.transform.GetSize().x))
 	{
-		m_mountain.transform.SetPosition(umath::vector2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), 150));
+		m_mountain.transform.SetPosition(umath::vector2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), -150));
 	}
 	if (m_mountain2.transform.GetPosition().x <= -(m_mountain2.transform.GetSize().x))
 	{
-		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), 150));
+		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), -150));
 	}
 
+}
 
+void ProtoScene::playerJump(float dt)
+{
+	m_playerJumpSpeed += 2000*dt;
+	auto speed = umath::vector2(0, m_playerJumpSpeed*dt);
+	m_player.transform.Move(speed);
+	if (m_player.transform.GetPosition().y >= m_playerGroundLevel){ m_isPlayerJumping = false; };
+}
+void ProtoScene::playerCrouch(float dt)
+{
 
 
 }
