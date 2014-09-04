@@ -18,36 +18,25 @@ bool ProtoScene::Init()
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	m_playerTexture = new Texture();
-	m_playerTexture->LoadFromFile("roar.tga");
-	m_bgCityTexture = new Texture();
-	m_bgCityTexture->LoadFromFile("background.tga");
-	m_frontCityTexture = new Texture();
-	m_frontCityTexture = new Texture("frontCity.tga");
+	auto& playerTexture = uthRS.LoadTexture("roar.tga");
+	auto& bgCityTexture = uthRS.LoadTexture("background.tga");
+	auto& bgFrontCityTexture = uthRS.LoadTexture("frontCity.tga");
+
+	m_player.AddComponent(new Sprite(&playerTexture));
+	m_bgCity1.AddComponent(new Sprite(&bgCityTexture));
+	m_bgCity2.AddComponent(new Sprite(&bgCityTexture));
+	m_frontCity.AddComponent(new Sprite(&bgFrontCityTexture));
+	m_frontCity2.AddComponent(new Sprite(&bgFrontCityTexture));
+
+	m_player .transform.SetPosition(umath::vector2(-400, 0));
+	m_bgCity1.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetSize().x / 2, 0));
+	m_bgCity2.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetPosition().x + 
+												   m_bgCity1.transform.GetSize().x, 0));
 
 
-	m_player = new GameObject();
-	m_bgCity1 = new GameObject();
-	m_bgCity2 = new GameObject();
-	m_frontCity = new GameObject();
-	m_frontCity2 = new GameObject();
-
-
-	m_player->AddComponent(new Sprite(m_playerTexture));
-	m_bgCity1->AddComponent(new Sprite(m_bgCityTexture));
-	m_bgCity2->AddComponent(new Sprite(m_bgCityTexture));
-	m_frontCity->AddComponent(new Sprite(m_frontCityTexture));
-	m_frontCity2->AddComponent(new Sprite(m_frontCityTexture));
-
-	m_player->transform.SetPosition(umath::vector2(-400, 0));
-	m_bgCity1->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetSize().x / 2, 0));
-	m_bgCity2->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetPosition().x + 
-													m_bgCity1->transform.GetSize().x, 0));
-
-
-	m_frontCity->transform.SetPosition(umath::vector2(  m_frontCity->transform.GetSize().x / 2, 150));
-	m_frontCity2->transform.SetPosition(umath::vector2( m_frontCity->transform.GetPosition().x +
-														m_frontCity->transform.GetSize().x, 150));
+	m_frontCity.transform.SetPosition(umath::vector2(  m_frontCity.transform.GetSize().x / 2, 150));
+	m_frontCity2.transform.SetPosition(umath::vector2( m_frontCity.transform.GetPosition().x +
+														m_frontCity.transform.GetSize().x, 150));
 
 
 
@@ -68,7 +57,7 @@ bool ProtoScene::Update(float dt)
 {
 	inputLogic(dt);
 	bgMovement(dt);
-	m_player->Update(dt);
+	m_player.Update(dt);
 	//m_spriteBatch->Update(dt);
 	return true; // Update succeeded.
 }
@@ -79,11 +68,11 @@ bool ProtoScene::Draw()
 	//Background color, set this first before else
 	uthEngine.GetWindow().Clear(0, 0, 0, 1);
 	//m_spriteBatch->Draw(uthEngine.GetWindow());
-	m_bgCity1->Draw(uthEngine.GetWindow());
-	m_bgCity2->Draw(uthEngine.GetWindow());
-	m_player->Draw(uthEngine.GetWindow());
-	m_frontCity->Draw(uthEngine.GetWindow());
-	m_frontCity2->Draw(uthEngine.GetWindow());
+	m_bgCity1	.Draw(uthEngine.GetWindow());
+	m_bgCity2	.Draw(uthEngine.GetWindow());
+	m_player	.Draw(uthEngine.GetWindow());
+	m_frontCity	.Draw(uthEngine.GetWindow());
+	m_frontCity2.Draw(uthEngine.GetWindow());
 
 	return true; // Drawing succeeded.
 }
@@ -103,41 +92,41 @@ void ProtoScene::inputLogic(float dt)
 {
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Left))
 	{
-		m_player->transform.Move(-100 * dt, 0);
+		m_player.transform.Move(-100 * dt, 0);
 	}
 	else if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Right))
 	{
-		m_player->transform.Move(100 * dt, 0);
+		m_player.transform.Move(100 * dt, 0);
 	}
 }
 
 void ProtoScene::bgMovement(float dt)
 {
-	m_bgCity1->transform.Move(-300 * dt, 0);
-	m_bgCity2->transform.Move(-300 * dt, 0);
-	m_frontCity->transform.Move(-400 * dt, 0);
-	m_frontCity2->transform.Move(-400 * dt, 0);
+	m_bgCity1   .transform.Move(-300 * dt, 0);
+	m_bgCity2   .transform.Move(-300 * dt, 0);
+	m_frontCity .transform.Move(-400 * dt, 0);
+	m_frontCity2.transform.Move(-400 * dt, 0);
 
-	if (m_bgCity1->transform.GetPosition().x <= -(m_bgCity1->transform.GetSize().x))
+	if (m_bgCity1.transform.GetPosition().x <= -(m_bgCity1.transform.GetSize().x))
 	{
-		m_bgCity1->transform.SetPosition(umath::vector2(m_bgCity2->transform.GetPosition().x + (m_bgCity2->transform.GetSize().x), 0));
+		m_bgCity1.transform.SetPosition(umath::vector2(m_bgCity2.transform.GetPosition().x + (m_bgCity2.transform.GetSize().x), 0));
 	}
-	if (m_bgCity2->transform.GetPosition().x <= -(m_bgCity2->transform.GetSize().x))
+	if (m_bgCity2.transform.GetPosition().x <= -(m_bgCity2.transform.GetSize().x))
 	{
-		m_bgCity2->transform.SetPosition(umath::vector2(m_bgCity1->transform.GetPosition().x + (m_bgCity1->transform.GetSize().x), 0));
+		m_bgCity2.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetPosition().x + (m_bgCity1.transform.GetSize().x), 0));
 	}
 
 
 	///////
 
 
-	if (m_frontCity->transform.GetPosition().x <= -(m_frontCity->transform.GetSize().x))
+	if (m_frontCity.transform.GetPosition().x <= -(m_frontCity.transform.GetSize().x))
 	{
-		m_frontCity->transform.SetPosition(umath::vector2(m_frontCity2->transform.GetPosition().x + (m_frontCity2->transform.GetSize().x), 150));
+		m_frontCity.transform.SetPosition(umath::vector2(m_frontCity2.transform.GetPosition().x + (m_frontCity2.transform.GetSize().x), 150));
 	}
-	if (m_frontCity2->transform.GetPosition().x <= -(m_frontCity2->transform.GetSize().x))
+	if (m_frontCity2.transform.GetPosition().x <= -(m_frontCity2.transform.GetSize().x))
 	{
-		m_frontCity2->transform.SetPosition(umath::vector2(m_frontCity->transform.GetPosition().x + (m_frontCity->transform.GetSize().x), 150));
+		m_frontCity2.transform.SetPosition(umath::vector2(m_frontCity.transform.GetPosition().x + (m_frontCity.transform.GetSize().x), 150));
 	}
 
 
