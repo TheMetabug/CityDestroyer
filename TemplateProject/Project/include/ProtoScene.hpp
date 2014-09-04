@@ -18,12 +18,14 @@ private: // Just place everything else as private.
 	uth::GameObject m_frontCity2;
 	uth::GameObject m_mountain;
 	uth::GameObject m_mountain2;
+	uth::GameObject m_heli;
 
 	//uth::AnimatedSprite m_playerAnimation;
 	//uth::SpriteBatch* m_spriteBatch;
 
 	void inputLogic(float dt);
 	void bgMovement(float dt);
+	float heliTime;
 
 public: // Every one of these public functions are required.
 	ProtoScene();
