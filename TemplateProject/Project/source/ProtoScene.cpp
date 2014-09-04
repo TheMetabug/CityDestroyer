@@ -48,9 +48,9 @@ bool ProtoScene::Init()
 	m_frontCity2.transform.SetPosition(umath::vector2( m_frontCity.transform.GetPosition().x +
 														m_frontCity.transform.GetSize().x, 150));
 
-	m_mountain.transform.SetPosition(umath::vector2(m_mountain.transform.GetSize().x / 2 -1500, 90));
+	m_mountain.transform.SetPosition(umath::vector2(m_mountain.transform.GetSize().x / 2 -1500, -150));
 	m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x +
-		m_mountain.transform.GetSize().x, 90));
+		m_mountain.transform.GetSize().x, -150));
 
 	//m_spriteBatch->AddSprite(m_player);
 
@@ -162,11 +162,11 @@ void ProtoScene::bgMovement(float dt)
 
 	if (m_mountain.transform.GetPosition().x <= -(m_mountain.transform.GetSize().x))
 	{
-		m_mountain.transform.SetPosition(umath::vector2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), 150));
+		m_mountain.transform.SetPosition(umath::vector2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), -150));
 	}
 	if (m_mountain2.transform.GetPosition().x <= -(m_mountain2.transform.GetSize().x))
 	{
-		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), 150));
+		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), -150));
 	}
 
 }
