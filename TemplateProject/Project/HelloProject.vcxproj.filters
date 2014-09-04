@@ -31,5 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\frontCity.tga" />
+    <Image Include="assets\mountain.tga" />
   </ItemGroup>
 </Project>
