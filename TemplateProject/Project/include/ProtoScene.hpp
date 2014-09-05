@@ -6,6 +6,7 @@
 #include <UtH/Engine/GameObject.hpp>
 #include <UtH/Engine/Sprite.hpp>
 #include <UtH/Core/Shader.hpp>
+#include <UtH/Renderer/Camera.hpp>
 
 class ProtoScene : public uth::Scene
 {
@@ -28,12 +29,17 @@ private: // Just place everything else as private.
 	void bgMovement(float dt);
 	float heliTime;
 
-	bool m_isPlayerJumping, m_isPlayerCrouching;
+	bool m_isPlayerJumping,
+		 m_isPlayerCrouching;
 
-	float m_playerJumpSpeed, m_playerGroundLevel;
+	float m_playerJumpSpeed,
+		  m_playerGroundLevel,
+		  m_playerCrouchTimer;
 
 	void playerJump	 (float dt);
 	void playerCrouch(float dt);
+
+	uth::Camera* gameCamera;
 
 
 public: // Every one of these public functions are required.

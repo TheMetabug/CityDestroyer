@@ -30,9 +30,7 @@ bool ProtoScene::Init()
 	auto& bgCityTexture		= uthRS.LoadTexture("background.tga");
 	auto& bgFrontCityTexture= uthRS.LoadTexture("frontCity.tga");
 	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
-	auto& heliTexture = uthRS.LoadTexture("heli.tga");
-
-
+	auto& heliTexture		= uthRS.LoadTexture("heli.tga");
 
 	m_player.AddComponent(new Sprite(&playerTexture));
 	m_player.transform.SetOrigin(umath::vector2(0,0.5));
@@ -65,6 +63,9 @@ bool ProtoScene::Init()
 
 	//m_spriteBatch->AddSprite(m_player);
 
+	gameCamera = new uth::Camera(umath::vector2(0, 0), uthEngine.GetWindowResolution());
+	uthEngine.GetWindow().SetCamera(gameCamera);
+
 	return true;
 }
 
@@ -79,12 +80,12 @@ bool ProtoScene::DeInit()
 bool ProtoScene::Update(float dt)
 {
 	inputLogic(dt);
-
 	//BG update things
 	bgMovement(dt);
 
 	//Player update things
 	m_player.Update(dt);
+	gameCamera->Update(dt);
 	if (m_isPlayerJumping && !m_isPlayerCrouching)playerJump(dt);
 	if (!m_isPlayerJumping && m_isPlayerCrouching)playerCrouch(dt);
 	
@@ -139,7 +140,7 @@ void ProtoScene::inputLogic(float dt)
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Down) && !m_isPlayerJumping)
 	{
 		m_isPlayerCrouching = true;
-		m_playerJumpSpeed = -10;
+		m_playerCrouchTimer = 2;
 	}
 
 }
@@ -201,16 +202,10 @@ void ProtoScene::playerJump(float dt)
 }
 void ProtoScene::playerCrouch(float dt)
 {
-	//WriteLog(std::to_string(m_playerJumpSpeed).c_str());
-	//WriteLog("\n");
-	//m_playerJumpSpeed += 100*dt;
-	//auto speed = umath::vector2(200, m_playerJumpSpeed);
-	//m_player.transform.SetSize(speed);
-	//if (m_player.transform.GetSize().y >= 200){ m_isPlayerCrouching = false; }
-
-	WriteLog("Crouch");
-	WriteLog("\n");
-	m_isPlayerCrouching = false;
-	//WriteLog("\n");
+	m_playerCrouchTimer -= dt;
+	if (m_playerCrouchTimer <= 0)
+	{
+		m_isPlayerCrouching = false;
+	}
 }
 
