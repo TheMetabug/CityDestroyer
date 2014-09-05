@@ -29,6 +29,7 @@ bool ProtoScene::Init()
 	// Some shader must be loaded and set window to use it
 
 	heliTime = 0;
+	aeroplaneTime = 0;
 	m_shader.LoadShader("Shaders/Default.vert", "Shaders/Default.frag");
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
@@ -41,6 +42,8 @@ bool ProtoScene::Init()
 	auto& heliTexture		= uthRS.LoadTexture("heli.tga");
 	auto& skyTexture = uthRS.LoadTexture("sky.tga");
 	auto& groundTexture = uthRS.LoadTexture("asphalt.tga");
+	auto& aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
+
 
 	playerTexture.SetSmooth(true);
 	m_player.AddComponent(new Sprite(&playerTexture));
@@ -54,11 +57,13 @@ bool ProtoScene::Init()
 	m_mountain2.AddComponent(new Sprite(&bgMountainTexture));
 	m_heli.AddComponent(new Sprite(&heliTexture));
 	m_auto.AddComponent(new Sprite(&autoTexture));
+	m_aeroplane.AddComponent(new Sprite(&aeroplaneTexture));
 	m_skyBg.AddComponent(new Sprite(&skyTexture));
 	m_groundTemp.AddComponent(new Sprite(&groundTexture));
 
 	m_heli.transform.SetPosition(umath::vector2(600, -500));
 	m_auto.transform.SetPosition(umath::vector2(1800, 0));
+	m_aeroplane.transform.SetPosition(umath::vector2(30, -10));
 
 	m_player.transform.SetPosition(umath::vector2(-400, m_playerGroundLevel));
 
@@ -97,6 +102,8 @@ bool ProtoScene::DeInit()
 bool ProtoScene::Update(float dt)
 {
 	inputLogic(dt);
+
+
 	//BG update things
 	bgMovement(dt);
 
@@ -107,6 +114,7 @@ bool ProtoScene::Update(float dt)
 	if (!m_isPlayerJumping && m_isPlayerCrouching)  playerCrouch(dt);
 	if (m_isCameraShaking)  shakeCamera(dt);
 	autoMove(dt);
+	aeroplaneMove(dt);
 
 	
 	//m_spriteBatch->Update(dt);
@@ -129,7 +137,7 @@ bool ProtoScene::Draw()
 	m_frontCity2.Draw(uthEngine.GetWindow());
 	m_heli.Draw (uthEngine.GetWindow());
 	m_auto.Draw (uthEngine.GetWindow());
-
+	m_aeroplane.Draw(uthEngine.GetWindow());
 
 
 	return true; // Drawing succeeded.
@@ -169,6 +177,14 @@ void ProtoScene::inputLogic(float dt)
 
 }
 
+
+void ProtoScene::aeroplaneMove(float dt)
+{
+	aeroplaneTime += 4*dt;
+	m_aeroplane.transform.SetPosition(1500-200*aeroplaneTime,20*aeroplaneTime-550);
+
+}
+
 void ProtoScene::bgMovement(float dt)
 {
 
@@ -181,6 +197,7 @@ void ProtoScene::bgMovement(float dt)
 
 	heliTime += 3*dt;
 	m_heli.transform.Move(10 * sin(heliTime) - 60*dt , 0.7*cos(heliTime / 2));
+
 
 	if (m_bgCity1.transform.GetPosition().x <= -(m_bgCity1.transform.GetSize().x))
 	{

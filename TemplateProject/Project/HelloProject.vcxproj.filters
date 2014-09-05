@@ -34,5 +34,6 @@
     <Image Include="assets\mountain.tga" />
     <Image Include="assets\heli.tga" />
     <Image Include="assets\auto.tga" />
+    <Image Include="assets\aeroplane.tga" />
   </ItemGroup>
 </Project>

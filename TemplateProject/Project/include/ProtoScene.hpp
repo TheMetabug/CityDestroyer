@@ -24,6 +24,7 @@ private: // Just place everything else as private.
 	uth::GameObject m_mountain2;
 	uth::GameObject m_heli;
 	uth::GameObject m_auto;
+	uth::GameObject m_aeroplane;
 
 
 	//uth::AnimatedSprite m_playerAnimation;
@@ -32,7 +33,9 @@ private: // Just place everything else as private.
 	void inputLogic(float dt);
 	void bgMovement(float dt);
 	float heliTime;
+	float aeroplaneTime;
 	void autoMove(float dt);
+	void aeroplaneMove(float dt);
 	//Player
 	bool m_isPlayerJumping,
 		 m_isPlayerCrouching;
