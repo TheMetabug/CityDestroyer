@@ -14,7 +14,7 @@ using namespace uth;
 bool ProtoScene::Init()
 {
 
-	m_playerGroundLevel	= 250;
+	m_playerGroundLevel	= 300;
 	m_isPlayerJumping	= false;
 	m_isPlayerCrouching = false;
 	m_playerJumpSpeed	= 0;
@@ -40,17 +40,13 @@ bool ProtoScene::Init()
 	auto& bgFrontCityTexture= uthRS.LoadTexture("lamps.tga");
 	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
 	auto& heliTexture		= uthRS.LoadTexture("heli.tga");
+<<<<<<< HEAD
 	auto& skyTexture = uthRS.LoadTexture("sky.tga");
 	auto& groundTexture = uthRS.LoadTexture("asphalt.tga");
+=======
 	auto& aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
-	auto& groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
-	for (int i = 0; i < 40; ++i)
-	{
-		roadBlocks.push_back(new GameObject);
-		roadBlocks[i]->AddComponent(new Sprite(&groundBlockTexture));
-		roadBlocks[i]->transform.SetPosition(umath::vector2(-uthEngine.GetWindowResolution().x / 2 + (float)i * 32 + 16, 250));
-	}
 
+>>>>>>> 23ce90764b429e159c20196de65a0fc5d9b976d2
 
 	playerTexture.SetSmooth(true);
 	m_player.AddComponent(new Sprite(&playerTexture));
@@ -64,12 +60,12 @@ bool ProtoScene::Init()
 	m_mountain2.AddComponent(new Sprite(&bgMountainTexture));
 	m_heli.AddComponent(new Sprite(&heliTexture));
 	m_auto.AddComponent(new Sprite(&autoTexture));
-	m_aeroplane.AddComponent(new Sprite(&aeroplaneTexture));
+<<<<<<< HEAD
 	m_skyBg.AddComponent(new Sprite(&skyTexture));
 	m_groundTemp.AddComponent(new Sprite(&groundTexture));
-	
-
-	
+=======
+	m_aeroplane.AddComponent(new Sprite(&aeroplaneTexture));
+>>>>>>> 23ce90764b429e159c20196de65a0fc5d9b976d2
 
 	m_heli.transform.SetPosition(umath::vector2(600, -500));
 	m_auto.transform.SetPosition(umath::vector2(1800, 0));
@@ -127,7 +123,6 @@ bool ProtoScene::Update(float dt)
 	aeroplaneMove(dt);
 
 	
-
 	//m_spriteBatch->Update(dt);
 	return true; // Update succeeded.
 }
@@ -143,16 +138,19 @@ bool ProtoScene::Draw()
 	m_groundTemp.Draw(uthEngine.GetWindow());
 	m_bgCity1	.Draw(uthEngine.GetWindow());
 	m_bgCity2	.Draw(uthEngine.GetWindow());
-	for (int i = 0; i < 40; ++i)
-	{
-		roadBlocks[i]->Draw(uthEngine.GetWindow());
-	}
 	m_player	.Draw(uthEngine.GetWindow());
 	m_frontCity	.Draw(uthEngine.GetWindow());
 	m_frontCity2.Draw(uthEngine.GetWindow());
+<<<<<<< HEAD
 	m_heli.Draw (uthEngine.GetWindow());
 	m_auto.Draw (uthEngine.GetWindow());
+
+=======
+	m_heli.Draw(uthEngine.GetWindow());
+	m_auto.Draw(uthEngine.GetWindow());
 	m_aeroplane.Draw(uthEngine.GetWindow());
+>>>>>>> 23ce90764b429e159c20196de65a0fc5d9b976d2
+
 
 	return true; // Drawing succeeded.
 }
@@ -295,3 +293,8 @@ void ProtoScene::shakeCamera(float dt)
 		gameCamera->SetPosition(umath::vector2(0,0));
 	}
 }
+
+//void ProtoScene::createRoad()
+//{
+//
+//}

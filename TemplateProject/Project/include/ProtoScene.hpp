@@ -59,8 +59,8 @@ private: // Just place everything else as private.
 	bool  m_isCameraShaking;
 	uth::Camera* gameCamera;
 	//Road
-//	std::vector < GameObject* > roadBlocks;
-//	void createRoad();
+	std::vector<uth::GameObject*> roadBlocks;
+	//uth::Texture 
 
 
 public: // Every one of these public functions are required.
