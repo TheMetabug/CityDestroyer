@@ -30,7 +30,7 @@ private: // Just place everything else as private.
 	void bgMovement(float dt);
 	float heliTime;
 	void autoMove(float dt);
-
+	//Player
 	bool m_isPlayerJumping,
 		 m_isPlayerCrouching;
 
@@ -40,7 +40,11 @@ private: // Just place everything else as private.
 
 	void playerJump	 (float dt);
 	void playerCrouch(float dt);
-
+	//Camera
+	void setCameraShake(float time, float amount);
+	void shakeCamera(float dt);
+	float m_cameraShakeTime, m_cameraShakeAmount;
+	bool  m_isCameraShaking;
 	uth::Camera* gameCamera;
 
 
