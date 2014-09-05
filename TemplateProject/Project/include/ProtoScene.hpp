@@ -17,11 +17,14 @@ private: // Just place everything else as private.
 	uth::GameObject m_bgCity2;
 	uth::GameObject m_frontCity;
 	uth::GameObject m_frontCity2;
+	uth::GameObject m_groundTemp;
+	uth::GameObject m_skyBg;
 
 	uth::GameObject m_mountain;
 	uth::GameObject m_mountain2;
 	uth::GameObject m_heli;
 	uth::GameObject m_auto;
+
 
 	//uth::AnimatedSprite m_playerAnimation;
 	//uth::SpriteBatch* m_spriteBatch;
@@ -40,12 +43,21 @@ private: // Just place everything else as private.
 
 	void playerJump	 (float dt);
 	void playerCrouch(float dt);
+	//Buildings
+	umath::vector2 m_frontCitySpawn;
+	umath::vector2 m_backCitySpawn;
+	umath::vector2 m_mountainSpawn;
+
+
 	//Camera
 	void setCameraShake(float time, float amount);
 	void shakeCamera(float dt);
 	float m_cameraShakeTime, m_cameraShakeAmount;
 	bool  m_isCameraShaking;
 	uth::Camera* gameCamera;
+	//Road
+//	std::vector < GameObject* > roadBlocks;
+//	void createRoad();
 
 
 public: // Every one of these public functions are required.
