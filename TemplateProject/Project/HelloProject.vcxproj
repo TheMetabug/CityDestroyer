@@ -92,6 +92,7 @@
     <ClInclude Include="include\ProtoScene.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\auto.tga" />
     <Image Include="assets\frontCity.tga" />
     <Image Include="assets\heli.tga" />
     <Image Include="assets\mountain.tga" />
