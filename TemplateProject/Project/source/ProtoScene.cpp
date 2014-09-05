@@ -6,7 +6,7 @@
 #include <UtH/Engine/SpriteBatch.hpp>
 #include <UtH/Platform/Input.hpp>
 #include <UtH/Platform/Debug.hpp> //WriteLog(...), works like printf.
-
+#include <UtH/Core/Randomizer.hpp>
 using namespace uth;
 
 // Main initialisation.
@@ -18,6 +18,8 @@ bool ProtoScene::Init()
 	m_isPlayerJumping	= false;
 	m_isPlayerCrouching = false;
 	m_playerJumpSpeed	= 0;
+
+	m_isCameraShaking = false;
 
 	// Some shader must be loaded and set window to use it
 
@@ -32,7 +34,7 @@ bool ProtoScene::Init()
 	auto& autoTexture = uthRS.LoadTexture("auto.tga");
 	auto& bgFrontCityTexture= uthRS.LoadTexture("frontCity.tga");
 	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
-	auto& heliTexture = uthRS.LoadTexture("heli.tga");
+	auto& heliTexture		= uthRS.LoadTexture("heli.tga");
 	auto& aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
 
 
@@ -69,6 +71,9 @@ bool ProtoScene::Init()
 
 	//m_spriteBatch->AddSprite(m_player);
 
+	gameCamera = new uth::Camera(umath::vector2(0, 0), uthEngine.GetWindowResolution());
+	uthEngine.GetWindow().SetCamera(gameCamera);
+
 	return true;
 }
 
@@ -84,13 +89,16 @@ bool ProtoScene::Update(float dt)
 {
 	inputLogic(dt);
 
+
 	//BG update things
 	bgMovement(dt);
 
 	//Player update things
 	m_player.Update(dt);
+	gameCamera->Update(dt);
 	if (m_isPlayerJumping && !m_isPlayerCrouching)playerJump(dt);
 	if (!m_isPlayerJumping && m_isPlayerCrouching)playerCrouch(dt);
+	if (m_isCameraShaking)shakeCamera(dt);
 	autoMove(dt);
 	aeroplaneMove(dt);
 
@@ -141,15 +149,15 @@ void ProtoScene::inputLogic(float dt)
 	{
 		m_player.transform.Move(100 * dt, 0);
 	}
-	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Up) && !m_isPlayerJumping)
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Up) && !m_isPlayerJumping  && !m_isPlayerCrouching)
 	{
 		m_isPlayerJumping = true;
 		m_playerJumpSpeed = -1000;
 	}
-	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Down) && !m_isPlayerJumping)
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Down) && !m_isPlayerJumping && !m_isPlayerCrouching)
 	{
 		m_isPlayerCrouching = true;
-		m_playerJumpSpeed = -10;
+		m_playerCrouchTimer = 2;
 	}
 
 }
@@ -223,20 +231,39 @@ void ProtoScene::playerJump(float dt)
 	m_playerJumpSpeed += 2000*dt;
 	auto speed = umath::vector2(0, m_playerJumpSpeed*dt);
 	m_player.transform.Move(speed);
-	if (m_player.transform.GetPosition().y >= m_playerGroundLevel){ m_isPlayerJumping = false; };
+	if (m_player.transform.GetPosition().y >= m_playerGroundLevel)
+	{
+		m_isPlayerJumping = false;
+		setCameraShake(0.5f, 5);
+	};
 }
 void ProtoScene::playerCrouch(float dt)
 {
-	//WriteLog(std::to_string(m_playerJumpSpeed).c_str());
-	//WriteLog("\n");
-	//m_playerJumpSpeed += 100*dt;
-	//auto speed = umath::vector2(200, m_playerJumpSpeed);
-	//m_player.transform.SetSize(speed);
-	//if (m_player.transform.GetSize().y >= 200){ m_isPlayerCrouching = false; }
-
-	WriteLog("Crouch");
-	WriteLog("\n");
-	m_isPlayerCrouching = false;
-	//WriteLog("\n");
+	m_playerCrouchTimer -= dt;
+	setCameraShake(0.1f, m_playerCrouchTimer);
+	if (m_playerCrouchTimer <= 0)
+	{
+		m_isPlayerCrouching = false;
+		m_isCameraShaking	= false;
+	}
 }
 
+void ProtoScene::setCameraShake(float time, float amount)
+{
+		m_cameraShakeTime = time;
+		m_cameraShakeAmount = amount;
+		m_isCameraShaking = true;
+}
+
+void ProtoScene::shakeCamera(float dt)
+{
+	m_cameraShakeTime -= dt;
+	auto pos = umath::vector2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
+							  Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount));
+	gameCamera->SetPosition(pos);
+	if (m_cameraShakeTime < 0)
+	{
+		m_isCameraShaking = false; 
+		gameCamera->SetPosition(umath::vector2(0,0));
+	}
+}

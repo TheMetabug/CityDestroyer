@@ -6,6 +6,7 @@
 #include <UtH/Engine/GameObject.hpp>
 #include <UtH/Engine/Sprite.hpp>
 #include <UtH/Core/Shader.hpp>
+#include <UtH/Renderer/Camera.hpp>
 
 class ProtoScene : public uth::Scene
 {
@@ -32,13 +33,22 @@ private: // Just place everything else as private.
 	float aeroplaneTime;
 	void autoMove(float dt);
 	void aeroplaneMove(float dt);
+	//Player
+	bool m_isPlayerJumping,
+		 m_isPlayerCrouching;
 
-	bool m_isPlayerJumping, m_isPlayerCrouching;
-
-	float m_playerJumpSpeed, m_playerGroundLevel;
+	float m_playerJumpSpeed,
+		  m_playerGroundLevel,
+		  m_playerCrouchTimer;
 
 	void playerJump	 (float dt);
 	void playerCrouch(float dt);
+	//Camera
+	void setCameraShake(float time, float amount);
+	void shakeCamera(float dt);
+	float m_cameraShakeTime, m_cameraShakeAmount;
+	bool  m_isCameraShaking;
+	uth::Camera* gameCamera;
 
 
 public: // Every one of these public functions are required.
