@@ -28,6 +28,7 @@ bool ProtoScene::Init()
 
 	auto& playerTexture		= uthRS.LoadTexture("roar.tga");
 	auto& bgCityTexture		= uthRS.LoadTexture("background.tga");
+	auto& autoTexture = uthRS.LoadTexture("auto.tga");
 	auto& bgFrontCityTexture= uthRS.LoadTexture("frontCity.tga");
 	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
 	auto& heliTexture		= uthRS.LoadTexture("heli.tga");
@@ -41,10 +42,11 @@ bool ProtoScene::Init()
 	m_mountain.AddComponent(new Sprite(&bgMountainTexture));
 	m_mountain2.AddComponent(new Sprite(&bgMountainTexture));
 	m_heli.AddComponent(new Sprite(&heliTexture));
+	m_auto.AddComponent(new Sprite(&autoTexture));
 
 
 	m_heli.transform.SetPosition(umath::vector2(600, -500));
-
+	m_auto.transform.SetPosition(umath::vector2(1800, 0));
 
 	m_player.transform.SetPosition(umath::vector2(-400, m_playerGroundLevel));
 
@@ -88,6 +90,8 @@ bool ProtoScene::Update(float dt)
 	gameCamera->Update(dt);
 	if (m_isPlayerJumping && !m_isPlayerCrouching)playerJump(dt);
 	if (!m_isPlayerJumping && m_isPlayerCrouching)playerCrouch(dt);
+	autoMove(dt);
+
 	
 	//m_spriteBatch->Update(dt);
 	return true; // Update succeeded.
@@ -107,6 +111,9 @@ bool ProtoScene::Draw()
 	m_frontCity	.Draw(uthEngine.GetWindow());
 	m_frontCity2.Draw(uthEngine.GetWindow());
 	m_heli.Draw(uthEngine.GetWindow());
+	m_auto.Draw(uthEngine.GetWindow());
+
+
 
 	return true; // Drawing succeeded.
 }
@@ -189,8 +196,15 @@ void ProtoScene::bgMovement(float dt)
 	if (m_mountain2.transform.GetPosition().x <= -(m_mountain2.transform.GetSize().x))
 	{
 		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), -150));
+
+
 	}
 
+}
+
+void ProtoScene::autoMove(float dt)
+{
+	m_auto.transform.Move(-600 * dt, 0);
 }
 
 void ProtoScene::playerJump(float dt)
