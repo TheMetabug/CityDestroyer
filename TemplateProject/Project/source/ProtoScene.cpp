@@ -13,7 +13,7 @@ using namespace uth;
 // Automatically called inside SceneManager.
 bool ProtoScene::Init()
 {
-
+	Randomizer::SetSeed();
 	m_playerGroundLevel	= 250;
 	m_isPlayerJumping	= false;
 	m_isPlayerCrouching = false;
@@ -22,6 +22,19 @@ bool ProtoScene::Init()
 	m_frontCitySpawn = pmath::Vec2(0, 250);
 	m_backCitySpawn  = pmath::Vec2(0, 60);
 	m_mountainSpawn  = pmath::Vec2(0, -100);
+	planeResetClock = 0;
+	planeResetTime = 0;
+	planeSpawnX = 1500;
+	planeSpawnY = -550;
+
+	carSpawnX = 1800;
+	carSpawnY = 200;
+	carWaitClock = 0;
+
+	heliSpawnX = 1000;
+	heliSpawnY = -500;
+	heliResetTime = 30;
+	heliResetClock = 0;
 
 
 	m_isCameraShaking = false;
@@ -36,7 +49,7 @@ bool ProtoScene::Init()
 	m_music->Loop(false);
 
 	heliTime = 0;
-	aeroplaneTime = 0;
+	aeroplaneSpeed = 0;
 	m_shader.LoadShader("Shaders/Default.vert", "Shaders/Default.frag");
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
@@ -83,8 +96,8 @@ bool ProtoScene::Init()
 
 	
 
-	m_heli.transform.SetPosition(pmath::Vec2(600, -500));
-	m_auto.transform.SetPosition(pmath::Vec2(1800, 0));
+	m_heli.transform.SetPosition(pmath::Vec2(heliSpawnX, heliSpawnY));
+	m_auto.transform.SetPosition(pmath::Vec2(carSpawnX, carSpawnY));
 	m_aeroplane.transform.SetPosition(pmath::Vec2(30, -10));
 
 	m_player.transform.SetPosition(pmath::Vec2(-400, m_playerGroundLevel));
@@ -126,7 +139,6 @@ bool ProtoScene::Update(float dt)
 {
 	inputLogic(dt);
 
-
 	//BG update things
 	bgMovement(dt);
 
@@ -136,8 +148,9 @@ bool ProtoScene::Update(float dt)
 	if (m_isPlayerJumping && !m_isPlayerCrouching)  playerJump(dt);
 	if (!m_isPlayerJumping && m_isPlayerCrouching)  playerCrouch(dt);
 	if (m_isCameraShaking)  shakeCamera(dt);
-	autoMove(dt);
+	carMove(dt);
 	aeroplaneMove(dt);
+	heliMove(dt);
 
 	
 	m_spriteBatch.Update(dt);
@@ -170,7 +183,6 @@ bool ProtoScene::Draw()
 //Default constructor for initialising constant variables.
 ProtoScene::ProtoScene() :m_spriteBatch(false)
 {
-
 
 }
 //Default deconstrutor.
@@ -205,8 +217,29 @@ void ProtoScene::inputLogic(float dt)
 
 void ProtoScene::aeroplaneMove(float dt)
 {
-	aeroplaneTime += 4*dt;
-	m_aeroplane.transform.SetPosition(1500-200*aeroplaneTime,20*aeroplaneTime-550);
+	aeroplaneSpeed += 4*dt;
+	m_aeroplane.transform.SetPosition(planeSpawnX-200*aeroplaneSpeed,20*aeroplaneSpeed+planeSpawnY);
+
+	if (planeResetClock >= planeResetTime)
+	{
+		planeReset();
+		planeResetTime = Randomizer::GetFloat(3, 10);
+	}
+	planeResetClock +=dt;
+
+}
+
+void ProtoScene::heliMove(float dt)
+{
+	heliTime += 3 * dt;
+	m_heli.transform.Move(10 * sin(heliTime) - 60 * dt, 0.7*cos(heliTime / 2));
+
+	if (heliResetClock >= heliResetTime)
+	{
+		heliReset();
+		heliResetTime = Randomizer::GetFloat(30, 60);
+	}
+	heliResetClock += dt;
 
 }
 
@@ -220,8 +253,6 @@ void ProtoScene::bgMovement(float dt)
 	m_mountain  .transform.Move(-20 * dt, 0);
 	m_mountain2 .transform.Move(-20 * dt, 0);
 
-	heliTime += 3*dt;
-	m_heli.transform.Move(10 * sin(heliTime) - 60*dt , 0.7*cos(heliTime / 2));
 
 
 	if (m_bgCity1.transform.GetPosition().x <= -(m_bgCity1.transform.GetSize().x))
@@ -259,10 +290,40 @@ void ProtoScene::bgMovement(float dt)
 
 }
 
-void ProtoScene::autoMove(float dt)
+void ProtoScene::planeReset()
 {
-	m_auto.transform.Move(-600 * dt, 0);
+	aeroplaneSpeed = 0;
+	m_aeroplane.transform.SetPosition(planeSpawnX, planeSpawnY);
+	planeResetClock = 0;
 }
+
+void ProtoScene::heliReset()
+{
+	heliTime = 0;
+	m_heli.transform.SetPosition(heliSpawnX, heliSpawnY);
+	heliResetClock = 0;
+}
+
+void ProtoScene::carMove(float dt)
+{
+	m_auto.transform.Move(-900 * dt, 0);
+
+	if (m_auto.transform.GetPosition().x <= -900)
+	{
+		carWaitClock += dt;
+
+		if (carWaitClock >= carWaitTime)
+		{
+			m_auto.transform.SetPosition(carSpawnX, carSpawnY);
+			carWaitClock = 0;
+			carWaitTime = Randomizer::GetFloat(0, 8);
+		}
+
+	}
+
+}
+
+
 
 void ProtoScene::playerJump(float dt)
 {
