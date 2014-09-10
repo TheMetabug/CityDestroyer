@@ -34,12 +34,35 @@ private: // Just place everything else as private.
 	uth::SpriteBatch m_spriteBatch;
 	std::array < uth::Transform, 40 > roadBlocks;
 
+	void heliMove(float dt);
 	void inputLogic(float dt);
 	void bgMovement(float dt);
+	void heliReset();
+	float heliResetClock;
+	float heliResetTime;
 	float heliTime;
-	float aeroplaneTime;
-	void autoMove(float dt);
+	float heliSpawnX;
+	float heliSpawnY;
+	float heliWaitClock;
+
+	float aeroplaneSpeed;
 	void aeroplaneMove(float dt);
+	float planeResetClock;
+	float planeResetTime;
+	float planeSpawnX;
+	float planeSpawnY;
+	void planeReset();
+
+	void carMove(float dt);
+	float carSpawnX;
+	float carSpawnY;
+	void carReset();
+	float carWaitTime;
+	float carWaitClock;
+
+
+
+
 	//Player
 	bool m_isPlayerJumping,
 		 m_isPlayerCrouching;
