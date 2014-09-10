@@ -5,6 +5,7 @@
 #include <UtH/Engine/Scene.hpp>
 #include <UtH/Engine/GameObject.hpp>
 #include <UtH/Engine/Sprite.hpp>
+#include <UtH/Engine/AnimatedSprite.hpp>
 #include <UtH/Core/Shader.hpp>
 #include <UtH/Renderer/Camera.hpp>
 #include <UtH/Engine/SpriteBatch.hpp>
@@ -36,6 +37,7 @@ private: // Just place everything else as private.
 	uth::SpriteBatch m_spriteBatch;
 
 	uth::Audio* m_music;
+	uth::Audio* m_stomp;
 	uth::SoundDevice* m_soundDevice;
 
 	std::array < uth::Transform, 40 > roadBlocks;
@@ -95,7 +97,16 @@ private: // Just place everything else as private.
 	//std::vector<uth::GameObject*> roadBlocks;
 	//uth::Texture 
 
-
+	float m_humanSpawnX, m_humanSpawnY;
+	float m_humanSpeed,
+		  m_bgCitySpeed,
+		  m_frontCitySpeed,
+		  m_mountainSpeed,
+		  m_carSpeed,
+		  m_planeSpeed,
+		  m_heliSpeed;
+	std::array < uth::GameObject, 4 > humans;
+	
 	void humanMove(float dt);
 
 public: // Every one of these public functions are required.
