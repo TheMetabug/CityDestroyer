@@ -73,6 +73,8 @@ private: // Just place everything else as private.
 	//uth::Texture 
 
 
+	void humanMove(float dt);
+
 public: // Every one of these public functions are required.
 	ProtoScene();
 	~ProtoScene();

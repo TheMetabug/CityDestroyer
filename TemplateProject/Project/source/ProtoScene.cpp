@@ -42,10 +42,10 @@ bool ProtoScene::Init()
 	uthEngine.GetWindow().SetShader(&m_shader);
 
 	auto playerTexture		= uthRS.LoadTexture("modzilla.tga");
-	auto bgCityTexture		= uthRS.LoadTexture("buildings.tga");
+	auto bgCityTexture		= uthRS.LoadTexture("buildings.png");
 	auto autoTexture		= uthRS.LoadTexture("car.tga");
-	auto bgFrontCityTexture= uthRS.LoadTexture("lamps.tga");
-	auto bgMountainTexture = uthRS.LoadTexture("mountain.tga");
+	auto bgFrontCityTexture= uthRS.LoadTexture("lamps.png");
+	auto bgMountainTexture = uthRS.LoadTexture("mountain.png");
 	auto heliTexture		= uthRS.LoadTexture("heli.tga");
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
 	auto groundTexture = uthRS.LoadTexture("asphalt.tga");
@@ -305,4 +305,9 @@ void ProtoScene::shakeCamera(float dt)
 		m_isCameraShaking = false; 
 		gameCamera->SetPosition(pmath::Vec2(0,0));
 	}
+}
+
+void ProtoScene::humanMove(float dt)
+{
+
 }
