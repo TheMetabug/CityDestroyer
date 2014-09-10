@@ -9,6 +9,7 @@
 #include <UtH/Platform/HiResTimer.hpp>
 #include <UtH/Resources/ResourceManager.h>
 #include <UtH/Engine/SceneManager.hpp>
+#include <pmath/Vector4.hpp>
 
 #define uthEngine uth::UTHEngine::getInstance()
 
@@ -27,16 +28,21 @@ namespace uth
 		bool m_running;
 	
 		bool initialize();
+
+        pmath::Vec4 m_clearColor;
 	public:
 		bool Init();
 		bool Init(const uth::WindowSettings &wsettings);
 		void Update();
 		void Draw();
 
+        void SetClearColor(const pmath::Vec4& color);
+        void SetClearColor(float r, float g, float b, float a = 1.0f);
+
         Window& GetWindow();
 		void SetWindow(void* handle);
 	
-		const umath::vector2 GetWindowResolution() const;
+		const pmath::Vec2 GetWindowResolution() const;
 		const bool Running() const;
 		const Timer timer() const;
 	};

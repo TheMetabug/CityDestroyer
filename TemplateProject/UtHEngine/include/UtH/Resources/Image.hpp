@@ -3,10 +3,11 @@
 #define IMAGE_H_UTH
 
 
-#include <UtH/Math/Vector2.hpp>
-#include <UtH/Math/Vector4.hpp>
+#include <pmath/Vector2.hpp>
+#include <pmath/Vector4.hpp>
 #include <UtH/Platform/Typedefs.hpp>
 #include <string>
+#include <vector>
 
 
 namespace uth
@@ -28,27 +29,24 @@ namespace uth
 
         bool LoadFromFile(const std::string& filePath);
 
-
-        const umath::vector2& GetSize() const;
+        const pmath::Vec2& GetSize() const;
 
 		BYTE GetDepth() const;
 
+        pmath::Vec4 GetPixel(unsigned int x, unsigned int y) const;
 
-        umath::vector4 GetPixel(unsigned int x, unsigned int y) const;
+        void flipVertical();
 
-
+        void flipHorizontal();
 
 
     private:
 
-        umath::vector2 m_size;
-        BYTE* m_pixels;
+        pmath::Vec2 m_size;
+        std::vector<BYTE> m_pixels;
         BYTE m_depth;
 
     };
-
 }
-
-
 
 #endif

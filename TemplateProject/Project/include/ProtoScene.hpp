@@ -7,6 +7,9 @@
 #include <UtH/Engine/Sprite.hpp>
 #include <UtH/Core/Shader.hpp>
 #include <UtH/Renderer/Camera.hpp>
+#include <UtH/Engine/SpriteBatch.hpp>
+
+#include <array>
 
 class ProtoScene : public uth::Scene
 {
@@ -28,7 +31,8 @@ private: // Just place everything else as private.
 
 
 	//uth::AnimatedSprite m_playerAnimation;
-	//uth::SpriteBatch* m_spriteBatch;
+	uth::SpriteBatch m_spriteBatch;
+	std::array < uth::Transform, 40 > roadBlocks;
 
 	void inputLogic(float dt);
 	void bgMovement(float dt);
@@ -47,9 +51,9 @@ private: // Just place everything else as private.
 	void playerJump	 (float dt);
 	void playerCrouch(float dt);
 	//Buildings
-	umath::vector2 m_frontCitySpawn;
-	umath::vector2 m_backCitySpawn;
-	umath::vector2 m_mountainSpawn;
+	pmath::Vec2 m_frontCitySpawn;
+	pmath::Vec2 m_backCitySpawn;
+	pmath::Vec2 m_mountainSpawn;
 
 
 	//Camera
@@ -59,7 +63,7 @@ private: // Just place everything else as private.
 	bool  m_isCameraShaking;
 	uth::Camera* gameCamera;
 	//Road
-	std::vector<uth::GameObject*> roadBlocks;
+	//std::vector<uth::GameObject*> roadBlocks;
 	//uth::Texture 
 
 

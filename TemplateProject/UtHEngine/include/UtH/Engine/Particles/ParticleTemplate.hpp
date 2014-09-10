@@ -3,8 +3,8 @@
 #define PARTICLETEMPLATE_H_UTH
 
 #include <UtH/Renderer/Texture.hpp>
-#include <UtH/Math/Rectangle.hpp>
-#include <UtH/Math/Vector4.hpp>
+#include <pmath/Rectangle.hpp>
+#include <pmath/Vector4.hpp>
 #include <string>
 #include <functional>
 
@@ -18,38 +18,39 @@ namespace uth
     {
  
         friend class ParticleSystem;
+        typedef std::function<void(Particle&, const ParticleTemplate&)> ParticleInitFunc;
 
     public:
 
         ParticleTemplate();
 
 
-        void SetTexture(Texture* texture, const umath::rectangle& texCoords = umath::rectangle(0.f, 0.f, 1.f, 1.f));
+        void SetTexture(Texture* texture, const pmath::Rect& texCoords = pmath::Rect(0.f, 0.f, 1.f, 1.f));
 
-        void SetLifetime(const double seconds);
+        void SetLifetime(const float seconds);
 
         void SetSpeed(const float pixelsPerSecond);
 
         void SetSpeed(const float pixelsPerSecondMin, const float pixelsPerSecondMax);
 
         /// Function for particle initialization. The initial transform will be copied from the ParticleSystem to which this template is bound.
-        void SetInitFunction(std::function<void(Particle&, ParticleTemplate&)> func);
+        void SetInitFunction(ParticleInitFunc func);
 
         void SetColor(const float r, const float g, const float b, const float a);
 
 
-        double lifetime;
+        float lifetime;
         float minSpeed,
               maxSpeed;
      
-        umath::vector4 color;
+        pmath::Vec4 color;
 
     private:
 
         Texture* m_texture;
-        umath::rectangle m_texCoords;
+        pmath::Rect m_texCoords;
 
-        std::function<void(Particle&, ParticleTemplate&)> m_pInitFunc;
+        ParticleInitFunc m_pInitFunc;
 
     };
 

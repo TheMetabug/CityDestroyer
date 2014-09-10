@@ -19,7 +19,7 @@ bool MenuScene::Init()
 	
 
 	m_startButton = new GameObject();
-	m_startButton->AddComponent(new Sprite(umath::vector4(1, 1, 0, 1), umath::vector2(256, 128)));
+	m_startButton->AddComponent(new Sprite(pmath::Vec4(1, 1, 0, 1), pmath::Vec2(256, 128)));
 
 	return true;
 }

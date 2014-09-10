@@ -19,9 +19,9 @@ bool ProtoScene::Init()
 	m_isPlayerCrouching = false;
 	m_playerJumpSpeed	= 0;
 
-	m_frontCitySpawn = umath::vector2(0, 250);
-	m_backCitySpawn  = umath::vector2(0, 60);
-	m_mountainSpawn  = umath::vector2(0, -100);
+	m_frontCitySpawn = pmath::Vec2(0, 250);
+	m_backCitySpawn  = pmath::Vec2(0, 60);
+	m_mountainSpawn  = pmath::Vec2(0, -100);
 
 
 	m_isCameraShaking = false;
@@ -34,69 +34,72 @@ bool ProtoScene::Init()
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	auto& playerTexture		= uthRS.LoadTexture("modzilla.tga");
-	auto& bgCityTexture		= uthRS.LoadTexture("buildings.tga");
-	auto& autoTexture		= uthRS.LoadTexture("car.tga");
-	auto& bgFrontCityTexture= uthRS.LoadTexture("lamps.tga");
-	auto& bgMountainTexture = uthRS.LoadTexture("mountain.tga");
-	auto& heliTexture		= uthRS.LoadTexture("heli.tga");
-	auto& skyTexture = uthRS.LoadTexture("sky.tga");
-	auto& groundTexture = uthRS.LoadTexture("asphalt.tga");
-	auto& aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
-	auto& groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
-	for (int i = 0; i < 40; ++i)
+	auto playerTexture		= uthRS.LoadTexture("modzilla.tga");
+	auto bgCityTexture		= uthRS.LoadTexture("buildings.tga");
+	auto autoTexture		= uthRS.LoadTexture("car.tga");
+	auto bgFrontCityTexture= uthRS.LoadTexture("lamps.tga");
+	auto bgMountainTexture = uthRS.LoadTexture("mountain.tga");
+	auto heliTexture		= uthRS.LoadTexture("heli.tga");
+	auto skyTexture = uthRS.LoadTexture("sky.tga");
+	auto groundTexture = uthRS.LoadTexture("asphalt.tga");
+	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
+	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
+
+	m_spriteBatch.SetTexture(groundBlockTexture);
+	unsigned int counter = 0;
+	for (auto& i: roadBlocks)
 	{
-		roadBlocks.push_back(new GameObject);
-		roadBlocks[i]->AddComponent(new Sprite(&groundBlockTexture));
-		roadBlocks[i]->transform.SetPosition(umath::vector2(-uthEngine.GetWindowResolution().x / 2 + (float)i * 32 + 16, 250));
+		m_spriteBatch.AddSprite(&i);
+		i.SetPosition(pmath::Vec2(-uthEngine.GetWindowResolution().x / 2 + counter * 32 + 16, 250));
+		++counter;
 	}
 
 
-	playerTexture.SetSmooth(true);
-	m_player.AddComponent(new Sprite(&playerTexture));
-	m_player.transform.SetOrigin(umath::vector2(0, 0.5f));
-	m_player.transform.SetScale(umath::vector2(0.75f, 0.75f));
-	m_bgCity1.AddComponent(new Sprite(&bgCityTexture));
-	m_bgCity2.AddComponent(new Sprite(&bgCityTexture));
-	m_frontCity.AddComponent(new Sprite(&bgFrontCityTexture));
-	m_frontCity2.AddComponent(new Sprite(&bgFrontCityTexture));
-	m_mountain.AddComponent(new Sprite(&bgMountainTexture));
-	m_mountain2.AddComponent(new Sprite(&bgMountainTexture));
-	m_heli.AddComponent(new Sprite(&heliTexture));
-	m_auto.AddComponent(new Sprite(&autoTexture));
-	m_aeroplane.AddComponent(new Sprite(&aeroplaneTexture));
-	m_skyBg.AddComponent(new Sprite(&skyTexture));
-	m_groundTemp.AddComponent(new Sprite(&groundTexture));
+	playerTexture->SetSmooth(true);
+	m_player.AddComponent(new Sprite(playerTexture));
+	m_player.transform.SetOrigin(pmath::Vec2(0, 0.5f));
+	m_player.transform.SetScale(pmath::Vec2(0.75f, 0.75f));
+	m_bgCity1.AddComponent(new Sprite(bgCityTexture));
+	m_bgCity2.AddComponent(new Sprite(bgCityTexture));
+	m_frontCity.AddComponent(new Sprite(bgFrontCityTexture));
+	m_frontCity2.AddComponent(new Sprite(bgFrontCityTexture));
+	m_mountain.AddComponent(new Sprite(bgMountainTexture));
+	m_mountain2.AddComponent(new Sprite(bgMountainTexture));
+	m_heli.AddComponent(new Sprite(heliTexture));
+	m_auto.AddComponent(new Sprite(autoTexture));
+	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
+	m_skyBg.AddComponent(new Sprite(skyTexture));
+	m_groundTemp.AddComponent(new Sprite(groundTexture));
 	
 
 	
 
-	m_heli.transform.SetPosition(umath::vector2(600, -500));
-	m_auto.transform.SetPosition(umath::vector2(1800, 0));
-	m_aeroplane.transform.SetPosition(umath::vector2(30, -10));
+	m_heli.transform.SetPosition(pmath::Vec2(600, -500));
+	m_auto.transform.SetPosition(pmath::Vec2(1800, 0));
+	m_aeroplane.transform.SetPosition(pmath::Vec2(30, -10));
 
-	m_player.transform.SetPosition(umath::vector2(-400, m_playerGroundLevel));
+	m_player.transform.SetPosition(pmath::Vec2(-400, m_playerGroundLevel));
 
-	m_bgCity1.transform.SetPosition(umath::vector2(0, m_backCitySpawn.y));
-	m_bgCity2.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetPosition().x + 
+	m_bgCity1.transform.SetPosition(pmath::Vec2(0, m_backCitySpawn.y));
+	m_bgCity2.transform.SetPosition(pmath::Vec2(m_bgCity1.transform.GetPosition().x + 
 												   m_bgCity1.transform.GetSize().x, m_backCitySpawn.y));
 
 
-	m_frontCity.transform.SetPosition(umath::vector2(0, m_frontCitySpawn.y));
-	m_frontCity2.transform.SetPosition(umath::vector2(m_frontCity.transform.GetPosition().x +
+	m_frontCity.transform.SetPosition(pmath::Vec2(0, m_frontCitySpawn.y));
+	m_frontCity2.transform.SetPosition(pmath::Vec2(m_frontCity.transform.GetPosition().x +
 													  m_frontCity.transform.GetSize().x, m_frontCitySpawn.y));
 
-	m_mountain.transform.SetPosition(umath::vector2(0, m_mountainSpawn.y));
-	m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x +
+	m_mountain.transform.SetPosition(pmath::Vec2(0, m_mountainSpawn.y));
+	m_mountain2.transform.SetPosition(pmath::Vec2(m_mountain.transform.GetPosition().x +
 													 m_mountain.transform.GetSize().x, m_mountainSpawn.y));
 
 	//m_spriteBatch->AddSprite(m_player);
 
-	gameCamera = new uth::Camera(umath::vector2(0, 0), uthEngine.GetWindowResolution());
+	gameCamera = new uth::Camera(pmath::Vec2(0, 0), uthEngine.GetWindowResolution());
 	uthEngine.GetWindow().SetCamera(gameCamera);
 
-	m_skyBg.transform.SetPosition(umath::vector2(0, 125));
-	m_groundTemp.transform.SetPosition(umath::vector2(0, 300));
+	m_skyBg.transform.SetPosition(pmath::Vec2(0, 125));
+	m_groundTemp.transform.SetPosition(pmath::Vec2(0, 300));
 
 	return true;
 }
@@ -127,7 +130,7 @@ bool ProtoScene::Update(float dt)
 	aeroplaneMove(dt);
 
 	
-
+	m_spriteBatch.Update(dt);
 	//m_spriteBatch->Update(dt);
 	return true; // Update succeeded.
 }
@@ -143,10 +146,7 @@ bool ProtoScene::Draw()
 	m_groundTemp.Draw(uthEngine.GetWindow());
 	m_bgCity1	.Draw(uthEngine.GetWindow());
 	m_bgCity2	.Draw(uthEngine.GetWindow());
-	for (int i = 0; i < 40; ++i)
-	{
-		roadBlocks[i]->Draw(uthEngine.GetWindow());
-	}
+	m_spriteBatch.Draw(uthEngine.GetWindow());
 	m_player	.Draw(uthEngine.GetWindow());
 	m_frontCity	.Draw(uthEngine.GetWindow());
 	m_frontCity2.Draw(uthEngine.GetWindow());
@@ -158,8 +158,9 @@ bool ProtoScene::Draw()
 }
 
 //Default constructor for initialising constant variables.
-ProtoScene::ProtoScene()
+ProtoScene::ProtoScene() :m_spriteBatch(false)
 {
+
 
 }
 //Default deconstrutor.
@@ -215,11 +216,11 @@ void ProtoScene::bgMovement(float dt)
 
 	if (m_bgCity1.transform.GetPosition().x <= -(m_bgCity1.transform.GetSize().x))
 	{
-		m_bgCity1.transform.SetPosition(umath::vector2(m_bgCity2.transform.GetPosition().x + (m_bgCity2.transform.GetSize().x), m_backCitySpawn.y));
+		m_bgCity1.transform.SetPosition(pmath::Vec2(m_bgCity2.transform.GetPosition().x + (m_bgCity2.transform.GetSize().x), m_backCitySpawn.y));
 	}
 	if (m_bgCity2.transform.GetPosition().x <= -(m_bgCity2.transform.GetSize().x))
 	{
-		m_bgCity2.transform.SetPosition(umath::vector2(m_bgCity1.transform.GetPosition().x + (m_bgCity1.transform.GetSize().x), m_backCitySpawn.y));
+		m_bgCity2.transform.SetPosition(pmath::Vec2(m_bgCity1.transform.GetPosition().x + (m_bgCity1.transform.GetSize().x), m_backCitySpawn.y));
 	}
 
 
@@ -228,22 +229,22 @@ void ProtoScene::bgMovement(float dt)
 
 	if (m_frontCity.transform.GetPosition().x <= -(m_frontCity.transform.GetSize().x))
 	{
-		m_frontCity.transform.SetPosition(umath::vector2(m_frontCity2.transform.GetPosition().x + (m_frontCity2.transform.GetSize().x), m_frontCitySpawn.y));
+		m_frontCity.transform.SetPosition(pmath::Vec2(m_frontCity2.transform.GetPosition().x + (m_frontCity2.transform.GetSize().x), m_frontCitySpawn.y));
 	}
 	if (m_frontCity2.transform.GetPosition().x <= -(m_frontCity2.transform.GetSize().x))
 	{
-		m_frontCity2.transform.SetPosition(umath::vector2(m_frontCity.transform.GetPosition().x + (m_frontCity.transform.GetSize().x), m_frontCitySpawn.y));
+		m_frontCity2.transform.SetPosition(pmath::Vec2(m_frontCity.transform.GetPosition().x + (m_frontCity.transform.GetSize().x), m_frontCitySpawn.y));
 	}
 
 	//////
 
 	if (m_mountain.transform.GetPosition().x <= -(m_mountain.transform.GetSize().x))
 	{
-		m_mountain.transform.SetPosition(umath::vector2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), m_mountainSpawn.y));
+		m_mountain.transform.SetPosition(pmath::Vec2(m_mountain2.transform.GetPosition().x + (m_mountain2.transform.GetSize().x), m_mountainSpawn.y));
 	}
 	if (m_mountain2.transform.GetPosition().x <= -(m_mountain2.transform.GetSize().x))
 	{
-		m_mountain2.transform.SetPosition(umath::vector2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), m_mountainSpawn.y));
+		m_mountain2.transform.SetPosition(pmath::Vec2(m_mountain.transform.GetPosition().x + (m_mountain.transform.GetSize().x), m_mountainSpawn.y));
 	}
 
 }
@@ -256,7 +257,7 @@ void ProtoScene::autoMove(float dt)
 void ProtoScene::playerJump(float dt)
 {
 	m_playerJumpSpeed += 2000*dt;
-	auto speed = umath::vector2(0, m_playerJumpSpeed*dt);
+	auto speed = pmath::Vec2(0, m_playerJumpSpeed*dt);
 	m_player.transform.Move(speed);
 	if (m_player.transform.GetPosition().y >= m_playerGroundLevel)
 	{
@@ -286,12 +287,12 @@ void ProtoScene::setCameraShake(float time, float amount)
 void ProtoScene::shakeCamera(float dt)
 {
 	m_cameraShakeTime -= dt;
-	auto pos = umath::vector2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
+	auto pos = pmath::Vec2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
 							  Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount));
 	gameCamera->SetPosition(pos);
 	if (m_cameraShakeTime < 0)
 	{
 		m_isCameraShaking = false; 
-		gameCamera->SetPosition(umath::vector2(0,0));
+		gameCamera->SetPosition(pmath::Vec2(0,0));
 	}
 }
