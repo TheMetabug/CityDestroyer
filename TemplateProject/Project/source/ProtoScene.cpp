@@ -28,6 +28,13 @@ bool ProtoScene::Init()
 
 	// Some shader must be loaded and set window to use it
 
+	m_soundDevice = new uth::SoundDevice();
+
+	m_music = new uth::Audio();
+	m_music->Load("city_theme.wav");
+	m_music->Play();
+	m_music->Loop(false);
+
 	heliTime = 0;
 	aeroplaneTime = 0;
 	m_shader.LoadShader("Shaders/Default.vert", "Shaders/Default.frag");
@@ -44,6 +51,7 @@ bool ProtoScene::Init()
 	auto groundTexture = uthRS.LoadTexture("asphalt.tga");
 	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
 	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
+	auto test = uthRS.LoadTexture("donut.png");
 
 	m_spriteBatch.SetTexture(groundBlockTexture);
 	unsigned int counter = 0;
@@ -67,6 +75,7 @@ bool ProtoScene::Init()
 	m_mountain2.AddComponent(new Sprite(bgMountainTexture));
 	m_heli.AddComponent(new Sprite(heliTexture));
 	m_auto.AddComponent(new Sprite(autoTexture));
+	m_human.AddComponent(new Sprite(test));
 	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
 	m_skyBg.AddComponent(new Sprite(skyTexture));
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
@@ -108,6 +117,7 @@ bool ProtoScene::Init()
 // Automatically called inside SceneManager.
 bool ProtoScene::DeInit()
 {
+	delete m_soundDevice;
 	return true;
 }
 

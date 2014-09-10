@@ -8,6 +8,7 @@
 #include <UtH/Core/Shader.hpp>
 #include <UtH/Renderer/Camera.hpp>
 #include <UtH/Engine/SpriteBatch.hpp>
+#include <UtH/Audio/Audio.hpp>
 
 #include <array>
 
@@ -28,10 +29,15 @@ private: // Just place everything else as private.
 	uth::GameObject m_heli;
 	uth::GameObject m_auto;
 	uth::GameObject m_aeroplane;
+	uth::GameObject m_human;
 
 
 	//uth::AnimatedSprite m_playerAnimation;
 	uth::SpriteBatch m_spriteBatch;
+
+	uth::Audio* m_music;
+	uth::SoundDevice* m_soundDevice;
+
 	std::array < uth::Transform, 40 > roadBlocks;
 
 	void inputLogic(float dt);
