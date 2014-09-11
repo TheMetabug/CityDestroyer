@@ -132,8 +132,7 @@ bool ProtoScene::Init()
 	m_tank.AddComponent(new Sprite(tankTexture));
 
 	
-
-	m_heli.transform.SetPosition(pmat	shochStartX = m_player.transform.GetPosition().x;h::Vec2(heliSpawnX, heliSpawnY));
+	m_heli.transform.SetPosition(pmath::Vec2(heliSpawnX, heliSpawnY));
 	m_auto.transform.SetPosition(pmath::Vec2(carSpawnX, carSpawnY));
 	m_aeroplane.transform.SetPosition(pmath::Vec2(30, -10));
 
@@ -231,6 +230,7 @@ bool ProtoScene::Update(float dt)
 	if (carAirBorne)
 	{
 		m_auto.transform.SetPosition(pmath::Vec2f(m_auto.transform.GetPosition().x, m_auto.transform.GetPosition().y - carAirSpeed * dt));
+		m_auto.transform.Rotate(dt * 900);
 	}
 
 	if (carAirBorne && m_auto.transform.GetPosition().y <= -400)
@@ -238,6 +238,7 @@ bool ProtoScene::Update(float dt)
 		carAirBorne = 0;
 		std::cout << carAirBorne << std::endl;
 		m_auto.transform.SetPosition(carSpawnX,carSpawnY);
+		m_auto.transform.SetRotation(0);
 	}
 
 
@@ -509,7 +510,8 @@ void ProtoScene::playerCrouch(float dt)
 	if (m_playerCrouchTimer <= 0)
 	{
 		m_isPlayerCrouching = false;
-		m_isCameraShaking	= false;
+		m_isCameraShaking = false;
+		gameCamera->SetRotation(0);
 	}
 }
 
@@ -526,12 +528,14 @@ void ProtoScene::shakeCamera(float dt)
 	auto pos = pmath::Vec2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
 							  Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount));
 	gameCamera->SetPosition(pos);
+	gameCamera->SetRotation(Randomizer::GetFloat(-0.6, 0.6));
 
 
-	if (m_cameraShakeTime < 0)
+	if (m_cameraShakeTime <= 0.f)
 	{
 		m_isCameraShaking = false; 
 		gameCamera->SetPosition(pmath::Vec2(0,0));
+		gameCamera->SetRotation(0);
 	}
 }
 

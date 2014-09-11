@@ -83,6 +83,7 @@ private: // Just place everything else as private.
 	float carWaitClock;
 	bool carAirBorne;
 	float carAirSpeed;
+	float carRot;
 
 	void tankMove(float dt);
 	float tankSpawnX;
