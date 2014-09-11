@@ -66,6 +66,7 @@ private: // Just place everything else as private.
 	void initShock(float dt);
 	float shockLenght;
 	float shockRange;
+	float shockPrecision;
 
 	float aeroplaneSpeed;
 	void aeroplaneMove(float dt);
@@ -81,6 +82,8 @@ private: // Just place everything else as private.
 	void carReset();
 	float carWaitTime;
 	float carWaitClock;
+	bool carAirBorne;
+	float carAirSpeed;
 
 	void tankMove(float dt);
 	float tankSpawnX;
@@ -89,6 +92,8 @@ private: // Just place everything else as private.
 	float tankWaitTime;
 	float tankWaitClock;
 	float tankSpeed;
+	int asd;
+
 
 	void explodeShake(float dt);
 	void explodeSpawn(float,float);

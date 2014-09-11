@@ -27,9 +27,11 @@ bool ProtoScene::Init()
 	planeSpawnX = 4500;
 	planeSpawnY = -450;
 
-	carSpawnX = 1800;
+	carSpawnX = 1100;
 	carSpawnY = 200;
 	carWaitClock = 0;
+	carAirBorne = 0;
+	carAirSpeed = 1000;
 
 	heliSpawnX = 1000;
 	heliSpawnY = -200;
@@ -50,12 +52,13 @@ bool ProtoScene::Init()
 	shockSpeed = 600;
 	shockTime = 0;
 	shockHeight = 0.1;
-	shockRange = 1500;
+	shockRange = 1400;
 	roadY = 320;
 	shockLenght = 128;
 	shock = 0;
 	shochStartX = 450;
 	shockHeightMatcher = 150;
+	shockPrecision = 100;
 
 	m_heliSpeed = 50;
 	tankSpawnX = 1300;
@@ -63,6 +66,7 @@ bool ProtoScene::Init()
 	tankWaitClock = 0;
 	tankWaitTime = 0;
 	tankSpeed = 150;
+	asd = 0;
 
 
 	m_isCameraShaking = false;
@@ -132,7 +136,7 @@ bool ProtoScene::Init()
 	m_explode.AddComponent(new Sprite(explodeTexture));
 	
 
-	m_heli.transform.SetPosition(pmath::Vec2(heliSpawnX, heliSpawnY));
+	m_heli.transform.SetPosition(pmat	shochStartX = m_player.transform.GetPosition().x;h::Vec2(heliSpawnX, heliSpawnY));
 	m_auto.transform.SetPosition(pmath::Vec2(carSpawnX, carSpawnY));
 	m_aeroplane.transform.SetPosition(pmath::Vec2(30, -10));
 
@@ -209,6 +213,7 @@ bool ProtoScene::Update(float dt)
 	heliMove(dt);
 	humanMove(dt);
 	tankMove(dt);
+	shochStartX = -m_player.transform.GetPosition().x;
 
 	if (shock)
 	{
@@ -224,6 +229,19 @@ bool ProtoScene::Update(float dt)
 	if (explodeIsOn)
 	{ 
 		explodeShake(dt);
+	}
+
+
+	if (carAirBorne)
+	{
+		m_auto.transform.SetPosition(pmath::Vec2f(m_auto.transform.GetPosition().x, m_auto.transform.GetPosition().y - carAirSpeed * dt));
+	}
+
+	if (carAirBorne && m_auto.transform.GetPosition().y <= -400)
+	{
+		carAirBorne = 0;
+		std::cout << carAirBorne << std::endl;
+		m_auto.transform.SetPosition(carSpawnX,carSpawnY);
 	}
 
 
@@ -437,21 +455,23 @@ void ProtoScene::heliReset()
 
 void ProtoScene::carMove(float dt)
 {
-	m_auto.transform.Move(-m_carSpeed * dt, 0);
-
-	if (m_auto.transform.GetPosition().x <= -900)
+	if (!carAirBorne)
 	{
-		carWaitClock += dt;
+		m_auto.transform.Move(-900 * dt, 0);
 
-		if (carWaitClock >= carWaitTime)
+		if (m_auto.transform.GetPosition().x <= -900)
 		{
-			m_auto.transform.SetPosition(carSpawnX, carSpawnY);
-			carWaitClock = 0;
-			carWaitTime = Randomizer::GetFloat(0, 8);
+			carWaitClock += dt;
+
+			if (carWaitClock >= carWaitTime)
+			{
+				m_auto.transform.SetPosition(carSpawnX, carSpawnY);
+				carWaitClock = 0;
+				carWaitTime = Randomizer::GetFloat(0, 8);
+			}
+
 		}
-
 	}
-
 }
 
 void ProtoScene::tankMove(float dt)
