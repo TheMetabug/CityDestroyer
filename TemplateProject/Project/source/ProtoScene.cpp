@@ -30,7 +30,7 @@ bool ProtoScene::Init()
 	carSpawnX = 1100;
 	carSpawnY = 200;
 	carWaitClock = 0;
-	carAirBorne = 0;
+	carAirBorne = false;
 	carAirSpeed = 1000;
 
 	heliSpawnX = 1000;
@@ -230,6 +230,10 @@ bool ProtoScene::Update(float dt)
 		explodeShake(dt);
 	}
 
+	if (m_auto.transform.GetPosition().x - shockSpeed*shockTime + shochStartX <= 0.5*shockLenght && shock)
+	{
+		carAirBorne = 1;
+	}
 
 	if (carAirBorne)
 	{
