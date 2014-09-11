@@ -28,7 +28,7 @@ private: // Just place everything else as private.
 	uth::GameObject m_heli;
 	uth::GameObject m_auto;
 	uth::GameObject m_aeroplane;
-
+	uth::GameObject m_tank;
 
 	//uth::AnimatedSprite m_playerAnimation;
 	uth::SpriteBatch m_spriteBatch;
@@ -47,7 +47,6 @@ private: // Just place everything else as private.
 	float heliWaitClock;
 	float shochStartX;
 	float shockHeightMatcher;
-
 	bool shock;
 	float shockTime;
 	float shockSpeed;
@@ -70,6 +69,13 @@ private: // Just place everything else as private.
 	void carReset();
 	float carWaitTime;
 	float carWaitClock;
+
+	void tankMove(float dt);
+	float tankSpawnX;
+	float tankSpawnY;
+	void tankReset();
+	float tankWaitTime;
+	float tankWaitClock;
 
 
 

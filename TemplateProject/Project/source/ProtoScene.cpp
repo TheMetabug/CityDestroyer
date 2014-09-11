@@ -46,6 +46,11 @@ bool ProtoScene::Init()
 	shochStartX = 450;
 	shockHeightMatcher = 150;
 
+	tankSpawnX = 1300;
+	tankSpawnY = 200;
+	tankWaitClock = 0;
+	tankWaitTime = 0;
+
 
 	m_isCameraShaking = false;
 
@@ -67,6 +72,7 @@ bool ProtoScene::Init()
 	auto groundTexture = uthRS.LoadTexture("asphalt.tga");
 	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
 	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
+	auto tankTexture = uthRS.LoadTexture("tank.tga");
 
 	m_spriteBatch.SetTexture(groundBlockTexture);
 	unsigned int counter = 0;
@@ -93,7 +99,7 @@ bool ProtoScene::Init()
 	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
 	m_skyBg.AddComponent(new Sprite(skyTexture));
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
-	
+	m_tank.AddComponent(new Sprite(tankTexture));
 
 	
 
@@ -124,6 +130,7 @@ bool ProtoScene::Init()
 	m_skyBg.transform.SetPosition(pmath::Vec2(0, 125));
 	m_groundTemp.transform.SetPosition(pmath::Vec2(0, 300));
 
+	m_tank.transform.SetPosition(pmath::Vec2(tankSpawnX, tankSpawnY));
 	return true;
 }
 
@@ -162,7 +169,7 @@ bool ProtoScene::Update(float dt)
 	carMove(dt);
 	aeroplaneMove(dt);
 	heliMove(dt);
-
+	tankMove(dt);
 
 	if (shock)
 	{
@@ -209,6 +216,7 @@ bool ProtoScene::Draw()
 	m_heli.Draw (uthEngine.GetWindow());
 	m_auto.Draw (uthEngine.GetWindow());
 	m_aeroplane.Draw(uthEngine.GetWindow());
+	m_tank.Draw(uthEngine.GetWindow());
 
 	return true; // Drawing succeeded.
 }
@@ -260,7 +268,6 @@ void ProtoScene::initShock(float dt)
 
 			if (shockLenght < std::abs(shockSpeed*shockTime - shochStartX - roadBlocks[i].GetPosition().x))
 			{
-				std::cout << "trolololo" << std::endl;
 				roadBlocks[i].SetPosition(roadBlocks[i].GetPosition().x, roadY);
 			}
 			else
@@ -391,7 +398,24 @@ void ProtoScene::carMove(float dt)
 
 }
 
+void ProtoScene::tankMove(float dt)
+{
+	m_tank.transform.Move(-900 * dt, 0);
 
+	if (m_tank.transform.GetPosition().x <= -900)
+	{
+		tankWaitClock += dt;
+
+		if (tankWaitClock >= carWaitTime)
+		{
+			m_tank.transform.SetPosition(tankSpawnX, tankSpawnY);
+			tankWaitClock = 0;
+			tankWaitTime = Randomizer::GetFloat(10, 25);
+		}
+
+	}
+
+}
 
 void ProtoScene::playerJump(float dt)
 {
