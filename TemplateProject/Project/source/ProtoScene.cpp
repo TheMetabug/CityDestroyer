@@ -50,6 +50,7 @@ bool ProtoScene::Init()
 	tankSpawnY = 200;
 	tankWaitClock = 0;
 	tankWaitTime = 0;
+	tankSpeed = 150;
 
 
 	m_isCameraShaking = false;
@@ -400,7 +401,7 @@ void ProtoScene::carMove(float dt)
 
 void ProtoScene::tankMove(float dt)
 {
-	m_tank.transform.Move(-900 * dt, 0);
+	m_tank.transform.Move(-tankSpeed * dt, 0);
 
 	if (m_tank.transform.GetPosition().x <= -900)
 	{

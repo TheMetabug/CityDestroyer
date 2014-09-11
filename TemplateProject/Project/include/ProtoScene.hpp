@@ -76,7 +76,7 @@ private: // Just place everything else as private.
 	void tankReset();
 	float tankWaitTime;
 	float tankWaitClock;
-
+	float tankSpeed;
 
 
 	//Player
