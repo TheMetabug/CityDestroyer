@@ -58,6 +58,12 @@ bool ProtoScene::Init()
 	shockHeightMatcher = 150;
 
 	m_heliSpeed = 50;
+	tankSpawnX = 1300;
+	tankSpawnY = 200;
+	tankWaitClock = 0;
+	tankWaitTime = 0;
+	tankSpeed = 150;
+
 
 	m_isCameraShaking = false;
 
@@ -90,6 +96,7 @@ bool ProtoScene::Init()
 	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.png");
 	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
 	auto humanRunTexture = uthRS.LoadTexture("man_run_ANIM.png");
+	auto tankTexture = uthRS.LoadTexture("tank.tga");
 	auto test = uthRS.LoadTexture("donut.png");
 
 	m_spriteBatch.SetTexture(groundBlockTexture);
@@ -118,7 +125,7 @@ bool ProtoScene::Init()
 	m_aeroplane.transform.SetSize(m_aeroplane.transform.GetSize().x / 2, m_aeroplane.transform.GetSize().y / 2);
 	m_skyBg.AddComponent(new Sprite(skyTexture));
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
-	
+	m_tank.AddComponent(new Sprite(tankTexture));
 
 	
 
@@ -156,6 +163,7 @@ bool ProtoScene::Init()
 	m_skyBg.transform.SetPosition(pmath::Vec2(0, 125));
 	m_groundTemp.transform.SetPosition(pmath::Vec2(0, 300));
 
+	m_tank.transform.SetPosition(pmath::Vec2(tankSpawnX, tankSpawnY));
 	return true;
 }
 
@@ -196,6 +204,7 @@ bool ProtoScene::Update(float dt)
 	aeroplaneMove(dt);
 	heliMove(dt);
 	humanMove(dt);
+	tankMove(dt);
 
 	if (shock)
 	{
@@ -244,6 +253,7 @@ bool ProtoScene::Draw()
 	m_auto.Draw (uthEngine.GetWindow());
 	m_heli.Draw (uthEngine.GetWindow());
 	m_aeroplane.Draw(uthEngine.GetWindow());
+	m_tank.Draw(uthEngine.GetWindow());
 	for (auto& i : humans)
 	{
 		i.Draw(uthEngine.GetWindow());
@@ -435,6 +445,23 @@ void ProtoScene::carMove(float dt)
 
 }
 
+void ProtoScene::tankMove(float dt)
+{
+	m_tank.transform.Move(-tankSpeed * dt, 0);
+
+	if (m_tank.transform.GetPosition().x <= -900)
+	{
+		tankWaitClock += dt;
+		if (tankWaitClock >= carWaitTime)
+		{
+			m_tank.transform.SetPosition(tankSpawnX, tankSpawnY);
+			tankWaitClock = 0;
+			tankWaitTime = Randomizer::GetFloat(10, 25);
+		}
+
+	}
+
+}
 void ProtoScene::playerJump(float dt)
 {
 	m_playerJumpSpeed += 2000*dt;

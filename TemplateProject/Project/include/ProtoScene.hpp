@@ -31,6 +31,8 @@ private: // Just place everything else as private.
 	uth::GameObject m_auto;
 	uth::GameObject m_aeroplane;
 	uth::GameObject m_human;
+	uth::GameObject m_tank;
+
 
 
 	//uth::AnimatedSprite m_playerAnimation;
@@ -79,6 +81,13 @@ private: // Just place everything else as private.
 	float carWaitTime;
 	float carWaitClock;
 
+	void tankMove(float dt);
+	float tankSpawnX;
+	float tankSpawnY;
+	void tankReset();
+	float tankWaitTime;
+	float tankWaitClock;
+	float tankSpeed;
 
 
 	//Player
