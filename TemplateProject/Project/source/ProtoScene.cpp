@@ -49,7 +49,7 @@ bool ProtoScene::Init()
 	m_carSpeed = 150;
 	m_planeSpeed = 400;
 	
-	shockSpeed = 600;
+	shockSpeed = 900;
 	shockTime = 0;
 	shockHeight = 0.1;
 	shockRange = 1400;
@@ -67,6 +67,7 @@ bool ProtoScene::Init()
 	tankWaitTime = 0;
 	tankSpeed = 150;
 	asd = 0;
+	lerpCam = 0;
 
 
 	m_isCameraShaking = false;
@@ -250,6 +251,17 @@ bool ProtoScene::Update(float dt)
 	}
 
 
+	if (std::abs(m_auto.transform.GetPosition().x - m_heli.transform.GetPosition().x ) <= 10 && std::abs(m_auto.transform.GetPosition().y - m_heli.transform.GetPosition().y ) <= 10)
+	{
+		expX = m_heli.transform.GetPosition().x;
+		expY = m_heli.transform.GetPosition().y;
+		explodeSpawn(expX,expY);
+
+		m_heli.transform.position.x = heliSpawnX;
+		m_heli.transform.position.y = heliSpawnY;
+
+	}
+
 	return true; // Update succeeded.
 
 }
@@ -311,12 +323,15 @@ ProtoScene::~ProtoScene()
 void ProtoScene::inputLogic(float dt)
 {
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Left))
-	{
-		m_player.transform.Move(-100 * dt, 0);
+	{	
+			gameCamera->SetPosition(pmath::Vec2f(-800, 0));
+	/*	m_player.transform.Move(-100 * dt, 0);*/
 	}
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Right))
 	{
-		m_player.transform.Move(100 * dt, 0);
+		/*m_player.transform.Move(100 * dt, 0);*/
+		gameCamera->SetPosition(pmath::Vec2f(0,0));
+
 	}
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Up) && !m_isPlayerJumping  && !m_isPlayerCrouching)
 	{
