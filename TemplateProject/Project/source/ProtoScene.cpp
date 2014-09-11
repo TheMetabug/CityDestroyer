@@ -254,7 +254,7 @@ void ProtoScene::inputLogic(float dt)
 void ProtoScene::initShock(float dt)
 {
 //	std::cout << "shock" << std::endl;
-		for (int i = 0; i < 40; i++)
+		for (int i = 0; i < roadBlocks.size(); i++)
 		{
 	
 
