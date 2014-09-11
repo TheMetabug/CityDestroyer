@@ -25,7 +25,7 @@ bool ProtoScene::Init()
 	planeResetClock = 0;
 	planeResetTime = 0;
 	planeSpawnX = 1500;
-	planeSpawnY = -550;
+	planeSpawnY = -250;
 
 	carSpawnX = 1800;
 	carSpawnY = 200;
@@ -51,7 +51,7 @@ bool ProtoScene::Init()
 	shockTime = 0;
 	shockHeight = 0.1;
 	shockRange = 1500;
-	roadY = 250;
+	roadY = 320;
 	shockLenght = 128;
 	shock = 0;
 	shochStartX = 450;
@@ -87,8 +87,9 @@ bool ProtoScene::Init()
 	auto heliTexture = uthRS.LoadTexture("copter.png");
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
 	auto groundTexture = uthRS.LoadTexture("asphalt.png");
-	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
+	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.png");
 	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
+	auto humanRunTexture = uthRS.LoadTexture("man_run_ANIM.png");
 	auto test = uthRS.LoadTexture("donut.png");
 
 	m_spriteBatch.SetTexture(groundBlockTexture);
@@ -96,7 +97,7 @@ bool ProtoScene::Init()
 	for (auto& i : roadBlocks)
 	{
 		m_spriteBatch.AddSprite(&i);
-		i.SetPosition(pmath::Vec2(-uthEngine.GetWindowResolution().x / 2 + counter * 32 + 16, roadY));
+		i.SetPosition(pmath::Vec2(-uthEngine.GetWindowResolution().x / 2 + counter * 15.9 + 8, roadY));
 		++counter;
 	}
 
@@ -114,6 +115,7 @@ bool ProtoScene::Init()
 	m_auto.AddComponent(new Sprite(autoTexture));
 	//m_human.AddComponent(new Sprite(test));
 	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
+	m_aeroplane.transform.SetSize(m_aeroplane.transform.GetSize().x / 2, m_aeroplane.transform.GetSize().y / 2);
 	m_skyBg.AddComponent(new Sprite(skyTexture));
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
 	
@@ -142,7 +144,8 @@ bool ProtoScene::Init()
 	for (auto& i : humans)
 	{
 		//i.SetPosition(pmath::Vec2(uthEngine.GetWindowResolution().x / 2 + counter * Randomizer::GetInt(15, 50) , 200));
-		i.AddComponent(new Sprite(test));
+		i.AddComponent(new AnimatedSprite(humanRunTexture, 2, 2, 1, 20));
+		i.transform.SetSize(i.transform.GetSize().x / 2, i.transform.GetSize().y / 2);
 		i.transform.SetPosition(pmath::Vec2(uthEngine.GetWindowResolution().x / 2 + counter * Randomizer::GetInt(10,90), 200 + Randomizer::GetInt(-20,20)));
 		++humanCount;
 	}
@@ -197,6 +200,10 @@ bool ProtoScene::Update(float dt)
 	if (shock)
 	{
 		initShock(dt);
+	}
+	for (auto& i : humans)
+	{
+		i.Update(dt);
 	}
 
 	m_spriteBatch.Update(dt);
@@ -296,7 +303,6 @@ void ProtoScene::initShock(float dt)
 
 			if (shockLenght < std::abs(shockSpeed*shockTime - shochStartX - roadBlocks[i].GetPosition().x))
 			{
-				std::cout << "trolololo" << std::endl;
 				roadBlocks[i].SetPosition(roadBlocks[i].GetPosition().x, roadY);
 			}
 			else

@@ -40,7 +40,7 @@ private: // Just place everything else as private.
 	uth::Audio* m_stomp;
 	uth::SoundDevice* m_soundDevice;
 
-	std::array < uth::Transform, 40 > roadBlocks;
+	std::array < uth::Transform, 80 > roadBlocks;
 
 	float roadY;
 	void heliMove(float dt);
