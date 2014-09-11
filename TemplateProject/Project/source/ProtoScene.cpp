@@ -19,7 +19,7 @@ bool ProtoScene::Init()
 	m_isPlayerCrouching = false;
 	m_playerJumpSpeed	= 0;
 
-	m_frontCitySpawn = pmath::Vec2(0, 315);
+	m_frontCitySpawn = pmath::Vec2(0, 300);
 	m_backCitySpawn  = pmath::Vec2(0, 60);
 	m_mountainSpawn  = pmath::Vec2(0, -100);
 	planeResetClock = 0;
@@ -68,14 +68,14 @@ bool ProtoScene::Init()
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	auto playerTexture		= uthRS.LoadTexture("modzilla_ANIM.png");
-	auto bgCityTexture		= uthRS.LoadTexture("buildings.png");
-	auto autoTexture		= uthRS.LoadTexture("car.png");
-	auto bgFrontCityTexture= uthRS.LoadTexture("lamps.png");
+	auto playerTexture = uthRS.LoadTexture("modzilla_ANIM.png");
+	auto bgCityTexture = uthRS.LoadTexture("buildings.png");
+	auto autoTexture = uthRS.LoadTexture("car.png");
+	auto bgFrontCityTexture = uthRS.LoadTexture("lamps.png");
 	auto bgMountainTexture = uthRS.LoadTexture("mountain.png");
-	auto heliTexture		= uthRS.LoadTexture("copter.png");
+	auto heliTexture = uthRS.LoadTexture("copter.png");
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
-	auto groundTexture = uthRS.LoadTexture("asphalt.tga");
+	auto groundTexture = uthRS.LoadTexture("asphalt.png");
 	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
 	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
 	auto test = uthRS.LoadTexture("donut.png");
@@ -88,7 +88,6 @@ bool ProtoScene::Init()
 		i.SetPosition(pmath::Vec2(-uthEngine.GetWindowResolution().x / 2 + counter * 32 + 16, 250));
 		++counter;
 	}
-
 
 	playerTexture->SetSmooth(true);
 	m_player.AddComponent(new AnimatedSprite(playerTexture,4,4,1));
@@ -133,7 +132,7 @@ bool ProtoScene::Init()
 	{
 		//i.SetPosition(pmath::Vec2(uthEngine.GetWindowResolution().x / 2 + counter * Randomizer::GetInt(15, 50) , 200));
 		i.AddComponent(new Sprite(test));
-		i.transform.SetPosition(pmath::Vec2(uthEngine.GetWindowResolution().x / 2 + counter * Randomizer::GetInt(50,150), 200));
+		i.transform.SetPosition(pmath::Vec2(uthEngine.GetWindowResolution().x / 2 + counter * Randomizer::GetInt(10,90), 200 + Randomizer::GetInt(-20,20)));
 		++humanCount;
 	}
 
