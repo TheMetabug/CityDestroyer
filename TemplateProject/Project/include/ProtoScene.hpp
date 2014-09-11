@@ -34,6 +34,7 @@ private: // Just place everything else as private.
 	uth::SpriteBatch m_spriteBatch;
 	std::array < uth::Transform, 40 > roadBlocks;
 
+	float roadY;
 	void heliMove(float dt);
 	void inputLogic(float dt);
 	void bgMovement(float dt);
@@ -44,6 +45,16 @@ private: // Just place everything else as private.
 	float heliSpawnX;
 	float heliSpawnY;
 	float heliWaitClock;
+	float shochStartX;
+	float shockHeightMatcher;
+
+	bool shock;
+	float shockTime;
+	float shockSpeed;
+	float shockHeight;
+	void initShock(float dt);
+	float shockLenght;
+	float shockRange;
 
 	float aeroplaneSpeed;
 	void aeroplaneMove(float dt);
@@ -59,7 +70,6 @@ private: // Just place everything else as private.
 	void carReset();
 	float carWaitTime;
 	float carWaitClock;
-
 
 
 

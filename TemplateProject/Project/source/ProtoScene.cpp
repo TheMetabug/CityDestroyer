@@ -14,14 +14,14 @@ using namespace uth;
 bool ProtoScene::Init()
 {
 	Randomizer::SetSeed();
-	m_playerGroundLevel	= 250;
-	m_isPlayerJumping	= false;
+	m_playerGroundLevel = 250;
+	m_isPlayerJumping = false;
 	m_isPlayerCrouching = false;
-	m_playerJumpSpeed	= 0;
+	m_playerJumpSpeed = 0;
 
 	m_frontCitySpawn = pmath::Vec2(0, 250);
-	m_backCitySpawn  = pmath::Vec2(0, 60);
-	m_mountainSpawn  = pmath::Vec2(0, -100);
+	m_backCitySpawn = pmath::Vec2(0, 60);
+	m_mountainSpawn = pmath::Vec2(0, -100);
 	planeResetClock = 0;
 	planeResetTime = 0;
 	planeSpawnX = 1500;
@@ -36,6 +36,16 @@ bool ProtoScene::Init()
 	heliResetTime = 30;
 	heliResetClock = 0;
 
+	shockSpeed = 600;
+	shockTime = 0;
+	shockHeight = 0.1;
+	shockRange = 1500;
+	roadY = 250;
+	shockLenght = 128;
+	shock = 0;
+	shochStartX = 450;
+	shockHeightMatcher = 150;
+
 
 	m_isCameraShaking = false;
 
@@ -47,12 +57,12 @@ bool ProtoScene::Init()
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	auto playerTexture		= uthRS.LoadTexture("modzilla.tga");
-	auto bgCityTexture		= uthRS.LoadTexture("buildings.tga");
-	auto autoTexture		= uthRS.LoadTexture("car.tga");
-	auto bgFrontCityTexture= uthRS.LoadTexture("lamps.tga");
+	auto playerTexture = uthRS.LoadTexture("modzilla.tga");
+	auto bgCityTexture = uthRS.LoadTexture("buildings.tga");
+	auto autoTexture = uthRS.LoadTexture("car.tga");
+	auto bgFrontCityTexture = uthRS.LoadTexture("lamps.tga");
 	auto bgMountainTexture = uthRS.LoadTexture("mountain.tga");
-	auto heliTexture		= uthRS.LoadTexture("heli.tga");
+	auto heliTexture = uthRS.LoadTexture("heli.tga");
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
 	auto groundTexture = uthRS.LoadTexture("asphalt.tga");
 	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.tga");
@@ -60,10 +70,10 @@ bool ProtoScene::Init()
 
 	m_spriteBatch.SetTexture(groundBlockTexture);
 	unsigned int counter = 0;
-	for (auto& i: roadBlocks)
+	for (auto& i : roadBlocks)
 	{
 		m_spriteBatch.AddSprite(&i);
-		i.SetPosition(pmath::Vec2(-uthEngine.GetWindowResolution().x / 2 + counter * 32 + 16, 250));
+		i.SetPosition(pmath::Vec2(-uthEngine.GetWindowResolution().x / 2 + counter * 32 + 16, roadY));
 		++counter;
 	}
 
@@ -124,6 +134,17 @@ bool ProtoScene::DeInit()
 	return true;
 }
 
+
+
+
+
+
+
+
+
+
+
+
 // Update loop. Gone trought once per frame.
 bool ProtoScene::Update(float dt)
 {
@@ -142,11 +163,33 @@ bool ProtoScene::Update(float dt)
 	aeroplaneMove(dt);
 	heliMove(dt);
 
-	
+
+	if (shock)
+	{
+		initShock(dt);
+	}
+
 	m_spriteBatch.Update(dt);
-	//m_spriteBatch->Update(dt);
+
 	return true; // Update succeeded.
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Draw loop. All graphics are drawn during this loop.
 bool ProtoScene::Draw()
@@ -200,9 +243,44 @@ void ProtoScene::inputLogic(float dt)
 	{
 		m_isPlayerCrouching = true;
 		m_playerCrouchTimer = 2;
+		shock = 1;
 	}
 
 }
+
+
+
+
+void ProtoScene::initShock(float dt)
+{
+//	std::cout << "shock" << std::endl;
+		for (int i = 0; i < 40; i++)
+		{
+	
+
+			if (shockLenght < std::abs(shockSpeed*shockTime - shochStartX - roadBlocks[i].GetPosition().x))
+			{
+				std::cout << "trolololo" << std::endl;
+				roadBlocks[i].SetPosition(roadBlocks[i].GetPosition().x, roadY);
+			}
+			else
+			{
+				roadBlocks[i].SetPosition(roadBlocks[i].GetPosition().x, roadY - shockHeight + std::pow((shockSpeed*shockTime - shochStartX) - roadBlocks[i].GetPosition().x, 2) / 100 - shockHeightMatcher);
+			}
+
+		}
+
+
+
+		shockTime += dt;
+
+		if (shockTime*shockSpeed >= shockRange)
+		{
+			shock = 0;
+			shockTime = 0;
+		}
+}
+
 
 
 void ProtoScene::aeroplaneMove(float dt)
@@ -351,6 +429,8 @@ void ProtoScene::shakeCamera(float dt)
 	auto pos = pmath::Vec2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
 							  Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount));
 	gameCamera->SetPosition(pos);
+
+
 	if (m_cameraShakeTime < 0)
 	{
 		m_isCameraShaking = false; 
