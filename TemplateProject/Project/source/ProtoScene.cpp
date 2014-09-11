@@ -24,8 +24,8 @@ bool ProtoScene::Init()
 	m_mountainSpawn = pmath::Vec2(0, -100);
 	planeResetClock = 0;
 	planeResetTime = 0;
-	planeSpawnX = 1500;
-	planeSpawnY = -250;
+	planeSpawnX = 4500;
+	planeSpawnY = -450;
 
 	carSpawnX = 1100;
 	carSpawnY = 200;
@@ -70,6 +70,7 @@ bool ProtoScene::Init()
 
 
 	m_isCameraShaking = false;
+	explodeIsOn = false;
 
 	// Some shader must be loaded and set window to use it
 
@@ -103,6 +104,8 @@ bool ProtoScene::Init()
 	auto tankTexture = uthRS.LoadTexture("tank.tga");
 	auto test = uthRS.LoadTexture("donut.png");
 
+	auto explodeTexture = uthRS.LoadTexture("explosion.png");
+
 	m_spriteBatch.SetTexture(groundBlockTexture);
 	unsigned int counter = 0;
 	for (auto& i : roadBlocks)
@@ -130,7 +133,7 @@ bool ProtoScene::Init()
 	m_skyBg.AddComponent(new Sprite(skyTexture));
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
 	m_tank.AddComponent(new Sprite(tankTexture));
-
+	m_explode.AddComponent(new Sprite(explodeTexture));
 	
 	m_heli.transform.SetPosition(pmath::Vec2(heliSpawnX, heliSpawnY));
 	m_auto.transform.SetPosition(pmath::Vec2(carSpawnX, carSpawnY));
@@ -167,6 +170,7 @@ bool ProtoScene::Init()
 	m_groundTemp.transform.SetPosition(pmath::Vec2(0, 300));
 
 	m_tank.transform.SetPosition(pmath::Vec2(tankSpawnX, tankSpawnY));
+	m_explode.transform.SetPosition(pmath::Vec2(1500, 1500));
 	return true;
 }
 
@@ -221,11 +225,11 @@ bool ProtoScene::Update(float dt)
 
 	m_spriteBatch.Update(dt);
 
-	if ((std::abs(m_auto.transform.GetPosition().x - shockTime * shockSpeed + shochStartX -0.5 * shockLenght) <= 10) && shock)
-	{
-		carAirBorne = 1;
-		std::cout << carAirBorne << std::endl;
+	if (explodeIsOn)
+	{ 
+		explodeShake(dt);
 	}
+
 
 	if (carAirBorne)
 	{
@@ -285,7 +289,7 @@ bool ProtoScene::Draw()
 	}
 	m_frontCity	.Draw(uthEngine.GetWindow());
 	m_frontCity2.Draw(uthEngine.GetWindow());
-
+	m_explode.Draw(uthEngine.GetWindow());
 	return true; // Drawing succeeded.
 }
 
@@ -347,8 +351,6 @@ void ProtoScene::initShock(float dt)
 
 		}
 
-
-
 		shockTime += dt;
 
 		if (shockTime*shockSpeed >= shockRange)
@@ -365,7 +367,7 @@ void ProtoScene::aeroplaneMove(float dt)
 	aeroplaneSpeed += 4*dt;
 	m_aeroplane.transform.SetPosition(planeSpawnX-200*aeroplaneSpeed,20*aeroplaneSpeed+planeSpawnY);
 
-	if (planeResetClock >= planeResetTime)
+	if (m_aeroplane.transform.GetPosition().x <= m_player.transform.GetPosition().x + 100)
 	{
 		planeReset();
 		planeResetTime = Randomizer::GetFloat(3, 10);
@@ -439,6 +441,7 @@ void ProtoScene::bgMovement(float dt)
 
 void ProtoScene::planeReset()
 {
+	explodeSpawn(m_aeroplane.transform.GetPosition().x, m_aeroplane.transform.GetPosition().y);
 	aeroplaneSpeed = 0;
 	m_aeroplane.transform.SetPosition(planeSpawnX, planeSpawnY);
 	planeResetClock = 0;
@@ -548,5 +551,27 @@ void ProtoScene::humanMove(float dt)
 		{
 			i.transform.SetPosition(Randomizer::GetFloat(30, 600) + m_humanSpawnX, m_humanSpawnY);
 		}
+	}
+}
+
+void ProtoScene::explodeSpawn(float x, float y)
+{
+	m_explode.transform.SetPosition(x, y);
+	explodeTime = 0.5;
+	explodeIsOn = true;
+}
+
+void ProtoScene::explodeShake(float dt)
+{
+	explodeTime -= dt;
+	if (explodeTime >= 0)
+	{
+		m_explode.transform.SetPosition(m_explode.transform.GetPosition().x + Randomizer::GetFloat(-3, 3),
+			m_explode.transform.GetPosition().y + Randomizer::GetFloat(-3, 3));
+	}
+	else
+	{
+		explodeIsOn = false;
+		m_explode.transform.SetPosition(1500,1500);
 	}
 }

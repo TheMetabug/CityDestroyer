@@ -32,6 +32,7 @@ private: // Just place everything else as private.
 	uth::GameObject m_aeroplane;
 	uth::GameObject m_human;
 	uth::GameObject m_tank;
+	uth::GameObject m_explode;
 
 
 
@@ -95,6 +96,10 @@ private: // Just place everything else as private.
 	int asd;
 
 
+	void explodeShake(float dt);
+	void explodeSpawn(float,float);
+	float explodeTime;
+	bool explodeIsOn;
 
 	//Player
 	bool m_isPlayerJumping,
