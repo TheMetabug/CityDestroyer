@@ -5,9 +5,11 @@
 #include <UtH/Engine/Scene.hpp>
 #include <UtH/Engine/GameObject.hpp>
 #include <UtH/Engine/Sprite.hpp>
+#include <UtH/Engine/AnimatedSprite.hpp>
 #include <UtH/Core/Shader.hpp>
 #include <UtH/Renderer/Camera.hpp>
 #include <UtH/Engine/SpriteBatch.hpp>
+#include <UtH/Audio/Audio.hpp>
 
 #include <array>
 
@@ -28,11 +30,19 @@ private: // Just place everything else as private.
 	uth::GameObject m_heli;
 	uth::GameObject m_auto;
 	uth::GameObject m_aeroplane;
+	uth::GameObject m_human;
 	uth::GameObject m_tank;
+
+
 
 	//uth::AnimatedSprite m_playerAnimation;
 	uth::SpriteBatch m_spriteBatch;
-	std::array < uth::Transform, 40 > roadBlocks;
+
+	uth::Audio* m_music;
+	uth::Audio* m_stomp;
+	uth::SoundDevice* m_soundDevice;
+
+	std::array < uth::Transform, 80 > roadBlocks;
 
 	float roadY;
 	void heliMove(float dt);
@@ -47,6 +57,7 @@ private: // Just place everything else as private.
 	float heliWaitClock;
 	float shochStartX;
 	float shockHeightMatcher;
+
 	bool shock;
 	float shockTime;
 	float shockSpeed;
@@ -110,6 +121,17 @@ private: // Just place everything else as private.
 	//std::vector<uth::GameObject*> roadBlocks;
 	//uth::Texture 
 
+	float m_humanSpawnX, m_humanSpawnY;
+	float m_humanSpeed,
+		  m_bgCitySpeed,
+		  m_frontCitySpeed,
+		  m_mountainSpeed,
+		  m_carSpeed,
+		  m_planeSpeed,
+		  m_heliSpeed;
+	std::array < uth::GameObject, 4 > humans;
+	
+	void humanMove(float dt);
 
 public: // Every one of these public functions are required.
 	ProtoScene();
