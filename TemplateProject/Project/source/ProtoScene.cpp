@@ -101,16 +101,16 @@ bool ProtoScene::Init()
 
 	auto playerTexture = uthRS.LoadTexture("modzilla/modzilla_walk.png");
 	auto bgCityTexture = uthRS.LoadTexture("buildings.png");
-	auto autoTexture = uthRS.LoadTexture("car.png");
+	auto autoTexture = uthRS.LoadTexture("vehicles/car1.png");
 	auto bgFrontCityTexture = uthRS.LoadTexture("lamps.png");
 	auto bgMountainTexture = uthRS.LoadTexture("mountain.png");
-	auto heliTexture = uthRS.LoadTexture("copter.png");
+	auto heliTexture = uthRS.LoadTexture("vehicles/fighter_copter.png");
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
 	auto groundTexture = uthRS.LoadTexture("asphalt.png");
-	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.png");
+	auto aeroplaneTexture = uthRS.LoadTexture("vehicles/fighter_plane.png");
 	auto groundBlockTexture = uthRS.LoadTexture("asphalt_block.png");
 	auto humanRunTexture = uthRS.LoadTexture("man_run_ANIM.png");
-	auto tankTexture = uthRS.LoadTexture("panssari.png");
+	auto tankTexture = uthRS.LoadTexture("vehicles/tank.png");
 	auto test = uthRS.LoadTexture("donut.png");
 
 	auto explodeTexture = uthRS.LoadTexture("explosion.png");
@@ -683,6 +683,8 @@ void ProtoScene::explodeShake(float dt)
 	{
 		m_explode.transform.SetPosition(m_explode.transform.GetPosition().x + Randomizer::GetFloat(-3, 3),
 			m_explode.transform.GetPosition().y + Randomizer::GetFloat(-3, 3));
+		m_explode.transform.SetScale(Randomizer::GetFloat(explodeTime, explodeTime*2));
+		m_explode.transform.Rotate(explodeTime);
 	}
 	else
 	{
