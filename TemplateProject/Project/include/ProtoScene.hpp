@@ -95,9 +95,19 @@ private: // Just place everything else as private.
 	float tankSpeed;
 	int asd;
 
+
 	float expX;
 	float expY;
-	float lerpCam;
+
+	void lerpCamLeft(float dt);
+	float lerpSpeed;
+	float camLerpX;
+	float camLeftMost;
+	float camRightMost;
+	bool isLerpingRight;
+	bool isLerpingLeft;
+	void lerpCamRight(float dt);
+
 
 	void explodeShake(float dt);
 	void explodeSpawn(float,float);

@@ -15,6 +15,7 @@ bool ProtoScene::Init()
 {
 	Randomizer::SetSeed();
 	m_playerGroundLevel = 250;
+	m_player.transform.SetPosition(pmath::Vec2f(0, m_playerGroundLevel));
 	m_isPlayerJumping = false;
 	m_isPlayerCrouching = false;
 	m_playerJumpSpeed = 0;
@@ -67,8 +68,14 @@ bool ProtoScene::Init()
 	tankWaitTime = 0;
 	tankSpeed = 150;
 	asd = 0;
-	lerpCam = 0;
 
+
+	camLerpX = 0;
+	lerpSpeed = 5;
+	camLeftMost = -450;
+	camRightMost = 450;
+	isLerpingRight = false;
+	isLerpingLeft = false;
 
 	m_isCameraShaking = false;
 	explodeIsOn = false;
@@ -128,7 +135,6 @@ bool ProtoScene::Init()
 	m_mountain2.AddComponent(new Sprite(bgMountainTexture));
 	m_heli.AddComponent(new Sprite(heliTexture));
 	m_auto.AddComponent(new Sprite(autoTexture));
-	//m_human.AddComponent(new Sprite(test));
 	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
 	m_aeroplane.transform.SetSize(m_aeroplane.transform.GetSize().x / 2, m_aeroplane.transform.GetSize().y / 2);
 	m_skyBg.AddComponent(new Sprite(skyTexture));
@@ -140,7 +146,6 @@ bool ProtoScene::Init()
 	m_auto.transform.SetPosition(pmath::Vec2(carSpawnX, carSpawnY));
 	m_aeroplane.transform.SetPosition(pmath::Vec2(30, -10));
 
-	m_player.transform.SetPosition(pmath::Vec2(-400, m_playerGroundLevel));
 
 	m_bgCity1.transform.SetPosition(pmath::Vec2(0, m_backCitySpawn.y));
 	m_bgCity2.transform.SetPosition(pmath::Vec2(m_bgCity1.transform.GetPosition().x + 
@@ -262,6 +267,20 @@ bool ProtoScene::Update(float dt)
 
 	}
 
+	if (isLerpingLeft)
+	{
+		isLerpingRight = false;
+		lerpCamLeft(dt);
+	}
+
+
+	if (isLerpingRight)
+	{
+		isLerpingLeft = false;
+		lerpCamRight(dt);
+	}
+
+
 	return true; // Update succeeded.
 
 }
@@ -270,9 +289,37 @@ bool ProtoScene::Update(float dt)
 
 
 
+void ProtoScene::lerpCamLeft(float dt)
+{
+	if (gameCamera->GetPosition().x > camLeftMost && isLerpingLeft)
 
+	{
+		camLerpX += camLeftMost * lerpSpeed* dt;
+		gameCamera->SetPosition(pmath::Vec2(camLerpX, gameCamera->GetPosition().y));
+	}
+	if (gameCamera->GetPosition().x <= camLeftMost && isLerpingLeft)
+	{
+		gameCamera->SetPosition(pmath::Vec2(camLeftMost, gameCamera->GetPosition().y));
+		isLerpingLeft = false;	
+	}
 
+}
 
+void ProtoScene::lerpCamRight(float dt)
+{
+	if (camLerpX < camRightMost  && isLerpingRight)
+
+	{
+		camLerpX -= camLeftMost * lerpSpeed* dt;
+		gameCamera->SetPosition(pmath::Vec2(camLerpX, gameCamera->GetPosition().y));
+	}
+
+	if (gameCamera->GetPosition().x >= camRightMost && isLerpingRight)
+	{
+		gameCamera->SetPosition(pmath::Vec2(camRightMost, gameCamera->GetPosition().y));
+		isLerpingRight = false;
+	}
+}
 
 
 
@@ -324,13 +371,11 @@ void ProtoScene::inputLogic(float dt)
 {
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Left))
 	{	
-			gameCamera->SetPosition(pmath::Vec2f(-800, 0));
-	/*	m_player.transform.Move(-100 * dt, 0);*/
+		isLerpingLeft = true;
 	}
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Right))
 	{
-		/*m_player.transform.Move(100 * dt, 0);*/
-		gameCamera->SetPosition(pmath::Vec2f(0,0));
+		isLerpingRight = true;;
 
 	}
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Up) && !m_isPlayerJumping  && !m_isPlayerCrouching)
