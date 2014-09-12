@@ -311,10 +311,10 @@ void ProtoScene::lerpCamLeft(float dt)
 		gameCamera->SetPosition(pmath::Vec2(camLeftMost, gameCamera->GetPosition().y));
 		isLerpingLeft = false;	
 		m_player.transform.SetScale(-abs(m_player.transform.GetScale().x), m_player.transform.GetScale().y);
-		m_player.GetComponent<AnimatedSprite>("AnimatedSprite")->SetColor(Randomizer::GetFloat(0, 1),
+		/*m_player.GetComponent<AnimatedSprite>("AnimatedSprite")->SetColor(Randomizer::GetFloat(0, 1),
 			Randomizer::GetFloat(0, 1),
 			Randomizer::GetFloat(0, 1),
-			1);
+			1);*/
 	}
 
 }
@@ -334,10 +334,10 @@ void ProtoScene::lerpCamRight(float dt)
 		gameCamera->SetPosition(pmath::Vec2(camRightMost, gameCamera->GetPosition().y));
 		isLerpingRight = false;
 		m_player.transform.SetScale(abs(m_player.transform.GetScale().x), m_player.transform.GetScale().y);
-		m_player.GetComponent<AnimatedSprite>("AnimatedSprite")->SetColor(Randomizer::GetFloat(0, 1),
+		/*m_player.GetComponent<AnimatedSprite>("AnimatedSprite")->SetColor(Randomizer::GetFloat(0, 1),
 			Randomizer::GetFloat(0, 1),
 			Randomizer::GetFloat(0, 1),
-			1);
+			1);*/
 	}
 }
 
