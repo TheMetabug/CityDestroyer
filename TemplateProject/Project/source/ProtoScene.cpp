@@ -722,7 +722,7 @@ void ProtoScene::explodeShake(float dt)
 	{
 		m_explode.transform.SetPosition(m_explode.transform.GetPosition().x + Randomizer::GetFloat(-3, 3),
 			m_explode.transform.GetPosition().y + Randomizer::GetFloat(-3, 3));
-		m_explode.transform.SetScale(Randomizer::GetFloat(explodeTime, explodeTime*2));
+		m_explode.transform.SetScale(Randomizer::GetFloat(explodeTime*2, explodeTime*4));
 		m_explode.transform.Rotate(explodeTime);
 	}
 	else
