@@ -49,6 +49,11 @@ bool ProtoScene::Init()
 	m_mountainSpeed = 20;
 	m_carSpeed = 150;
 	m_planeSpeed = 400;
+
+	missileSpeed = 500;
+	normModifier = 0.25;
+	isMissile = 0;
+	normIncrement = 0;
 	
 	shockSpeed = 900;
 	shockTime = 0;
@@ -68,6 +73,7 @@ bool ProtoScene::Init()
 	tankWaitTime = 0;
 	tankSpeed = 150;
 	asd = 0;
+	missileClock = 0;
 
 
 	camLerpX = 0;
@@ -111,6 +117,7 @@ bool ProtoScene::Init()
 	auto humanRunTexture = uthRS.LoadTexture("man_run_ANIM.png");
 	auto tankTexture = uthRS.LoadTexture("panssari.png");
 	auto test = uthRS.LoadTexture("donut.png");
+	auto missileTexture = uthRS.LoadTexture("missile.png");
 
 	auto explodeTexture = uthRS.LoadTexture("explosion.png");
 
@@ -142,6 +149,8 @@ bool ProtoScene::Init()
 	m_tank.AddComponent(new Sprite(tankTexture));
 	m_explode.AddComponent(new Sprite(explodeTexture));
 	
+	m_missile.AddComponent(new Sprite(missileTexture));
+
 	m_heli.transform.SetPosition(pmath::Vec2(heliSpawnX, heliSpawnY));
 	m_auto.transform.SetPosition(pmath::Vec2(carSpawnX, carSpawnY));
 	m_aeroplane.transform.SetPosition(pmath::Vec2(30, -10));
@@ -281,11 +290,35 @@ bool ProtoScene::Update(float dt)
 	}
 
 
+	if (isMissile)
+	{
+		missilePath(dt);
+	}
+
 	return true; // Update succeeded.
 
 }
 
+void ProtoScene::missilePath(float dt)
+{
+	if (isMissile)
+	{
+		
 
+		homingSystem = sin((-m_player.transform.GetPosition() + m_missile.transform.GetPosition()).dot(mainDir));
+
+		m_missile.transform.SetPosition(pmath::Vec2f(missileSpawn - missileSpeed * missileClock * (mainDir + normModifier*sin(3*missileClock)*sin(missileClock*5)/2 * normDir)));
+		missileClock += dt;
+
+		if ((m_missile.transform.GetPosition() - m_player.transform.GetPosition()).length() <= 30 || missileClock >= 3)
+		{
+			m_missile.transform.SetPosition(m_heli.transform.GetPosition());
+			explodeSpawn(m_player.transform.GetPosition().x, m_player.transform.GetPosition().y);
+			missileClock = 0;
+			isMissile = 0;
+		}
+	}
+}
 
 
 
@@ -346,6 +379,7 @@ bool ProtoScene::Draw()
 	m_heli.Draw (uthEngine.GetWindow());
 	m_aeroplane.Draw(uthEngine.GetWindow());
 	m_tank.Draw(uthEngine.GetWindow());
+	m_missile.Draw(uthEngine.GetWindow());
 	for (auto& i : humans)
 	{
 		i.Draw(uthEngine.GetWindow());
@@ -383,6 +417,16 @@ void ProtoScene::inputLogic(float dt)
 		m_isPlayerJumping = true;
 		m_playerJumpSpeed = -1000;
 	}
+
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Q))
+	{
+		missileSpawn = m_heli.transform.GetPosition();
+		mainDir = ((-m_player.transform.GetPosition() + missileSpawn).normalize());
+		normDir = pmath::Vec2f(mainDir.y, -mainDir.x);
+		m_missile.transform.SetPosition(missileSpawn);
+		isMissile = true;
+	}
+
 	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Down) && !m_isPlayerJumping && !m_isPlayerCrouching)
 	{
 		m_isPlayerCrouching = true;

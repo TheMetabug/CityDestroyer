@@ -33,7 +33,7 @@ private: // Just place everything else as private.
 	uth::GameObject m_human;
 	uth::GameObject m_tank;
 	uth::GameObject m_explode;
-
+	uth::GameObject m_missile;
 
 
 	//uth::AnimatedSprite m_playerAnimation;
@@ -49,7 +49,20 @@ private: // Just place everything else as private.
 	void heliMove(float dt);
 	void inputLogic(float dt);
 	void bgMovement(float dt);
+	float normIncrement;
+	float missileClock;
+	float homingSystem;
+
 	void heliReset();
+	void missilePath(float dt);
+	pmath::Vec2f mainDir;
+	pmath::Vec2f normDir;
+	float missileSpeed;
+	pmath::Vec2f missileSpawn;
+	float normModifier; // close to zero: straight path... else curvy.
+
+	bool isMissile;
+
 	float heliResetClock;
 	float heliResetTime;
 	float heliTime;
