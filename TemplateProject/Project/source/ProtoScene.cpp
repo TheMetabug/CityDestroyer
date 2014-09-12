@@ -107,9 +107,9 @@ bool ProtoScene::Init()
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
 	auto groundTexture = uthRS.LoadTexture("asphalt.png");
 	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.png");
-	auto groundBlockTexture = uthRS.LoadTexture("roadblock.tga");
+	auto groundBlockTexture = uthRS.LoadTexture("asphalt_block.png");
 	auto humanRunTexture = uthRS.LoadTexture("man_run_ANIM.png");
-	auto tankTexture = uthRS.LoadTexture("tank.tga");
+	auto tankTexture = uthRS.LoadTexture("panssari.png");
 	auto test = uthRS.LoadTexture("donut.png");
 
 	auto explodeTexture = uthRS.LoadTexture("explosion.png");
@@ -522,9 +522,9 @@ void ProtoScene::carMove(float dt)
 {
 	if (!carAirBorne)
 	{
-		m_auto.transform.Move(-900 * dt, 0);
+		m_auto.transform.Move(-m_carSpeed * dt, 0);
 
-		if (m_auto.transform.GetPosition().x <= -900)
+		if (m_auto.transform.GetPosition().x <= -m_carSpeed)
 		{
 			carWaitClock += dt;
 
