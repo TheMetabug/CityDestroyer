@@ -78,6 +78,7 @@ bool ProtoScene::Init()
 	isLerpingLeft = false;
 
 	m_isCameraShaking = false;
+	setTempPos = true;
 	explodeIsOn = false;
 
 	// Some shader must be loaded and set window to use it
@@ -98,7 +99,7 @@ bool ProtoScene::Init()
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	auto playerTexture = uthRS.LoadTexture("modzilla_ANIM.png");
+	auto playerTexture = uthRS.LoadTexture("modzilla/modzilla_walk.png");
 	auto bgCityTexture = uthRS.LoadTexture("buildings.png");
 	auto autoTexture = uthRS.LoadTexture("car.png");
 	auto bgFrontCityTexture = uthRS.LoadTexture("lamps.png");
@@ -138,6 +139,7 @@ bool ProtoScene::Init()
 	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
 	m_aeroplane.transform.SetSize(m_aeroplane.transform.GetSize().x / 2, m_aeroplane.transform.GetSize().y / 2);
 	m_skyBg.AddComponent(new Sprite(skyTexture));
+	m_skyBg.transform.SetSize(m_skyBg.transform.GetSize().x*2, m_skyBg.transform.GetSize().y);
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
 	m_tank.AddComponent(new Sprite(tankTexture));
 	m_explode.AddComponent(new Sprite(explodeTexture));
@@ -294,6 +296,7 @@ void ProtoScene::lerpCamLeft(float dt)
 	if (gameCamera->GetPosition().x > camLeftMost && isLerpingLeft)
 
 	{
+		isLookingRight = false;
 		camLerpX += camLeftMost * lerpSpeed* dt;
 		gameCamera->SetPosition(pmath::Vec2(camLerpX, gameCamera->GetPosition().y));
 	}
@@ -310,6 +313,7 @@ void ProtoScene::lerpCamRight(float dt)
 	if (camLerpX < camRightMost  && isLerpingRight)
 
 	{
+		isLookingRight = true;
 		camLerpX -= camLeftMost * lerpSpeed* dt;
 		gameCamera->SetPosition(pmath::Vec2(camLerpX, gameCamera->GetPosition().y));
 	}
@@ -577,7 +581,20 @@ void ProtoScene::playerCrouch(float dt)
 	if (m_playerCrouchTimer <= 0)
 	{
 		m_isPlayerCrouching = false;
-		m_isCameraShaking = false;
+
+		if (m_cameraShakeTime <= 0.f)
+		{
+			m_isCameraShaking = false;
+			if (isLookingRight)
+			{
+				gameCamera->SetPosition(pmath::Vec2(camRightMost, 0));
+			}
+			else
+			{
+				gameCamera->SetPosition(pmath::Vec2(camLeftMost, 0));
+			}
+			gameCamera->SetRotation(0);
+		}
 		gameCamera->SetRotation(0);
 	}
 }
@@ -592,17 +609,35 @@ void ProtoScene::setCameraShake(float time, float amount)
 void ProtoScene::shakeCamera(float dt)
 {
 	m_cameraShakeTime -= dt;
-	auto pos = pmath::Vec2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
-							  Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount));
-	gameCamera->SetPosition(pos);
-	gameCamera->SetRotation(Randomizer::GetFloat(-0.6, 0.6));
+
+	if (setTempPos)
+	{
+		tempPos.x = gameCamera->GetPosition().x;
+		tempPos.y = gameCamera->GetPosition().y;
+		setTempPos = false;
+	}
+	else
+	{
+		auto pos = pmath::Vec2(Randomizer::GetFloat(tempPos.x - m_cameraShakeAmount, tempPos.x + m_cameraShakeAmount),
+			Randomizer::GetFloat(tempPos.y + m_cameraShakeAmount, tempPos.y - m_cameraShakeAmount));
+		gameCamera->SetPosition(pos);
+		gameCamera->SetRotation(Randomizer::GetFloat(-0.6, 0.6));
+	}
 
 
 	if (m_cameraShakeTime <= 0.f)
 	{
 		m_isCameraShaking = false; 
-		gameCamera->SetPosition(pmath::Vec2(0,0));
+		if (isLookingRight)
+		{
+			gameCamera->SetPosition(pmath::Vec2(camRightMost, 0));
+		}
+		else
+		{
+			gameCamera->SetPosition(pmath::Vec2(camLeftMost, 0));
+		}
 		gameCamera->SetRotation(0);
+		setTempPos = true;
 	}
 }
 
