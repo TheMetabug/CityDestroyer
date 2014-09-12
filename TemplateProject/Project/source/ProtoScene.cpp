@@ -84,6 +84,7 @@ bool ProtoScene::Init()
 	isLerpingLeft = false;
 
 	m_isCameraShaking = false;
+	setTempPos = true;
 	explodeIsOn = false;
 
 	// Some shader must be loaded and set window to use it
@@ -104,18 +105,18 @@ bool ProtoScene::Init()
 	m_shader.Use();
 	uthEngine.GetWindow().SetShader(&m_shader);
 
-	auto playerTexture = uthRS.LoadTexture("modzilla_ANIM.png");
+	auto playerTexture = uthRS.LoadTexture("modzilla/modzilla_walk.png");
 	auto bgCityTexture = uthRS.LoadTexture("buildings.png");
-	auto autoTexture = uthRS.LoadTexture("car.png");
+	auto autoTexture = uthRS.LoadTexture("vehicles/car1.png");
 	auto bgFrontCityTexture = uthRS.LoadTexture("lamps.png");
 	auto bgMountainTexture = uthRS.LoadTexture("mountain.png");
-	auto heliTexture = uthRS.LoadTexture("copter.png");
+	auto heliTexture = uthRS.LoadTexture("vehicles/fighter_copter.png");
 	auto skyTexture = uthRS.LoadTexture("sky.tga");
 	auto groundTexture = uthRS.LoadTexture("asphalt.png");
-	auto aeroplaneTexture = uthRS.LoadTexture("aeroplane.png");
+	auto aeroplaneTexture = uthRS.LoadTexture("vehicles/fighter_plane.png");
 	auto groundBlockTexture = uthRS.LoadTexture("asphalt_block.png");
 	auto humanRunTexture = uthRS.LoadTexture("man_run_ANIM.png");
-	auto tankTexture = uthRS.LoadTexture("panssari.png");
+	auto tankTexture = uthRS.LoadTexture("vehicles/tank.png");
 	auto test = uthRS.LoadTexture("donut.png");
 	auto missileTexture = uthRS.LoadTexture("missile.png");
 
@@ -145,6 +146,7 @@ bool ProtoScene::Init()
 	m_aeroplane.AddComponent(new Sprite(aeroplaneTexture));
 	m_aeroplane.transform.SetSize(m_aeroplane.transform.GetSize().x / 2, m_aeroplane.transform.GetSize().y / 2);
 	m_skyBg.AddComponent(new Sprite(skyTexture));
+	m_skyBg.transform.SetSize(m_skyBg.transform.GetSize().x*2, m_skyBg.transform.GetSize().y);
 	m_groundTemp.AddComponent(new Sprite(groundTexture));
 	m_tank.AddComponent(new Sprite(tankTexture));
 	m_explode.AddComponent(new Sprite(explodeTexture));
@@ -295,6 +297,7 @@ bool ProtoScene::Update(float dt)
 		missilePath(dt);
 	}
 
+
 	return true; // Update succeeded.
 
 }
@@ -327,6 +330,7 @@ void ProtoScene::lerpCamLeft(float dt)
 	if (gameCamera->GetPosition().x > camLeftMost && isLerpingLeft)
 
 	{
+		isLookingRight = false;
 		camLerpX += camLeftMost * lerpSpeed* dt;
 		gameCamera->SetPosition(pmath::Vec2(camLerpX, gameCamera->GetPosition().y));
 	}
@@ -334,6 +338,11 @@ void ProtoScene::lerpCamLeft(float dt)
 	{
 		gameCamera->SetPosition(pmath::Vec2(camLeftMost, gameCamera->GetPosition().y));
 		isLerpingLeft = false;	
+		m_player.transform.SetScale(-abs(m_player.transform.GetScale().x), m_player.transform.GetScale().y);
+		/*m_player.GetComponent<AnimatedSprite>("AnimatedSprite")->SetColor(Randomizer::GetFloat(0, 1),
+			Randomizer::GetFloat(0, 1),
+			Randomizer::GetFloat(0, 1),
+			1);*/
 	}
 
 }
@@ -343,6 +352,7 @@ void ProtoScene::lerpCamRight(float dt)
 	if (camLerpX < camRightMost  && isLerpingRight)
 
 	{
+		isLookingRight = true;
 		camLerpX -= camLeftMost * lerpSpeed* dt;
 		gameCamera->SetPosition(pmath::Vec2(camLerpX, gameCamera->GetPosition().y));
 	}
@@ -351,6 +361,11 @@ void ProtoScene::lerpCamRight(float dt)
 	{
 		gameCamera->SetPosition(pmath::Vec2(camRightMost, gameCamera->GetPosition().y));
 		isLerpingRight = false;
+		m_player.transform.SetScale(abs(m_player.transform.GetScale().x), m_player.transform.GetScale().y);
+		/*m_player.GetComponent<AnimatedSprite>("AnimatedSprite")->SetColor(Randomizer::GetFloat(0, 1),
+			Randomizer::GetFloat(0, 1),
+			Randomizer::GetFloat(0, 1),
+			1);*/
 	}
 }
 
@@ -621,7 +636,20 @@ void ProtoScene::playerCrouch(float dt)
 	if (m_playerCrouchTimer <= 0)
 	{
 		m_isPlayerCrouching = false;
-		m_isCameraShaking = false;
+
+		if (m_cameraShakeTime <= 0.f)
+		{
+			m_isCameraShaking = false;
+			if (isLookingRight)
+			{
+				gameCamera->SetPosition(pmath::Vec2(camRightMost, 0));
+			}
+			else
+			{
+				gameCamera->SetPosition(pmath::Vec2(camLeftMost, 0));
+			}
+			gameCamera->SetRotation(0);
+		}
 		gameCamera->SetRotation(0);
 	}
 }
@@ -636,17 +664,35 @@ void ProtoScene::setCameraShake(float time, float amount)
 void ProtoScene::shakeCamera(float dt)
 {
 	m_cameraShakeTime -= dt;
-	auto pos = pmath::Vec2(Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount),
-							  Randomizer::GetFloat(-m_cameraShakeAmount, m_cameraShakeAmount));
-	gameCamera->SetPosition(pos);
-	gameCamera->SetRotation(Randomizer::GetFloat(-0.6, 0.6));
+
+	if (setTempPos)
+	{
+		tempPos.x = gameCamera->GetPosition().x;
+		tempPos.y = gameCamera->GetPosition().y;
+		setTempPos = false;
+	}
+	else
+	{
+		auto pos = pmath::Vec2(Randomizer::GetFloat(tempPos.x - m_cameraShakeAmount, tempPos.x + m_cameraShakeAmount),
+			Randomizer::GetFloat(tempPos.y + m_cameraShakeAmount, tempPos.y - m_cameraShakeAmount));
+		gameCamera->SetPosition(pos);
+		gameCamera->SetRotation(Randomizer::GetFloat(-0.6, 0.6));
+	}
 
 
 	if (m_cameraShakeTime <= 0.f)
 	{
 		m_isCameraShaking = false; 
-		gameCamera->SetPosition(pmath::Vec2(0,0));
+		if (isLookingRight)
+		{
+			gameCamera->SetPosition(pmath::Vec2(camRightMost, 0));
+		}
+		else
+		{
+			gameCamera->SetPosition(pmath::Vec2(camLeftMost, 0));
+		}
 		gameCamera->SetRotation(0);
+		setTempPos = true;
 	}
 }
 
@@ -676,6 +722,8 @@ void ProtoScene::explodeShake(float dt)
 	{
 		m_explode.transform.SetPosition(m_explode.transform.GetPosition().x + Randomizer::GetFloat(-3, 3),
 			m_explode.transform.GetPosition().y + Randomizer::GetFloat(-3, 3));
+		m_explode.transform.SetScale(Randomizer::GetFloat(explodeTime, explodeTime*2));
+		m_explode.transform.Rotate(explodeTime);
 	}
 	else
 	{

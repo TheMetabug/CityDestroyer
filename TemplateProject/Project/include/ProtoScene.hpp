@@ -119,6 +119,9 @@ private: // Just place everything else as private.
 	float camRightMost;
 	bool isLerpingRight;
 	bool isLerpingLeft;
+	bool isLookingRight;
+	bool setTempPos;
+	pmath::Vec2 tempPos;
 	void lerpCamRight(float dt);
 
 
