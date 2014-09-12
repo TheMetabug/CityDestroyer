@@ -34,7 +34,7 @@ bool MenuScene::DeInit()
 // Update loop. Gone trought once per frame.
 bool MenuScene::Update(float dt)
 {
-	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Space) /*|| uth::InputEvent::TAP*/)
+	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Space) || uth::InputEvent::TAP)
 	{
 		uthSceneM.GoToScene(1);
 		WriteLog("Start game...");
