@@ -13,6 +13,9 @@ namespace uth
 {
     class Camera : public GameObject
     {
+
+        friend class RenderTarget;
+
     public:
 
         Camera();
@@ -43,21 +46,25 @@ namespace uth
 
         const pmath::Vec2& GetPosition() const;
 
-        const pmath::Vec2& GetSize() const;
+        pmath::Vec2 GetSize() const;
 
         float GetRotation() const;
 
         const pmath::Mat4& GetProjectionTransform() const;
 
+        const pmath::Mat4& GetInverseProjectionTransform() const;
 
 
     private:
 
-        pmath::Vec2 m_size;
         float m_zoom;
-        mutable pmath::Mat4 m_viewMatrix;
-        mutable bool m_transformNeedsUpdate;
+        mutable pmath::Mat4 m_projMatrix,
+                            m_invProjMatrix;
+        mutable bool m_transformNeedsUpdate,
+                     m_inverseTransformNeedsUpdate;
 
+        // This will be used for unbounding this camera from the target.
+        RenderTarget* m_target;
     };
 }
 

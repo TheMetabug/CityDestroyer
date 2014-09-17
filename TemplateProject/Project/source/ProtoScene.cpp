@@ -1,12 +1,6 @@
 #include "../include/ProtoScene.hpp"
 
-#include <UtH/Engine/UtHEngine.h>
-#include <UtH/Engine/Sprite.hpp>
-#include <UtH/Engine/AnimatedSprite.hpp>
-#include <UtH/Engine/SpriteBatch.hpp>
-#include <UtH/Platform/Input.hpp>
-#include <UtH/Platform/Debug.hpp> //WriteLog(...), works like printf.
-#include <UtH/Core/Randomizer.hpp>
+#include <UtH/UtHEngine.hpp>
 using namespace uth;
 
 // Main initialisation.
@@ -41,7 +35,7 @@ bool ProtoScene::Init()
 
 	m_humanSpawnX = uthEngine.GetWindowResolution().x + 100;
 	m_humanSpawnY = 200;
-
+	
 
 	m_humanSpeed = 200;
 	m_bgCitySpeed = 100;
@@ -89,15 +83,12 @@ bool ProtoScene::Init()
 
 	// Some shader must be loaded and set window to use it
 
-	m_soundDevice = new uth::SoundDevice();
-
-	m_music = new uth::Audio();
-	m_music->Load("city_theme.wav");
+	m_music = uth::Sound::Load("city_theme.wav");
+	
 	m_music->Play();
 	m_music->Loop(true);
 
-	m_stomp = new uth::Audio();
-	m_stomp->Load("impact_temporary.wav");
+	m_stomp = uth::Sound::Load("impact_temporary.wav");
 
 	heliTime = 0;
 	aeroplaneSpeed = 0;
@@ -195,7 +186,6 @@ bool ProtoScene::Init()
 // Automatically called inside SceneManager.
 bool ProtoScene::DeInit()
 {
-	delete m_soundDevice;
 	return true;
 }
 
@@ -273,8 +263,7 @@ bool ProtoScene::Update(float dt)
 		expY = m_heli.transform.GetPosition().y;
 		explodeSpawn(expX,expY);
 
-		m_heli.transform.position.x = heliSpawnX;
-		m_heli.transform.position.y = heliSpawnY;
+		m_heli.transform.SetPosition(heliSpawnX,heliSpawnY);
 
 	}
 

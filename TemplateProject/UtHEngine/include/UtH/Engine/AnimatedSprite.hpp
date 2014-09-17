@@ -32,14 +32,18 @@ namespace uth
 
 	private:
 
-		void genererateBuffer();
+		void generateBuffer();
 
 		unsigned int m_frames; // in the loop
 		unsigned int m_firstFrame; // of the loop
 		unsigned int m_curFrame;
 		unsigned int m_frameCount;
 
-		pmath::Rect m_frameSize;
+		// frame size in pixels
+		pmath::Vec2 m_sizePx;
+		// frame size in texture coordinates
+		pmath::Vec2 m_sizeTc;
+
 		float m_fps;
 		float m_delay;
 
@@ -49,8 +53,6 @@ namespace uth
 
 		unsigned int m_frameCountX;
 		unsigned int m_frameCountY;
-
-		pmath::Rect frame;
 	};
 }
 #endif

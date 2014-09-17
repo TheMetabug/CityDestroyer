@@ -1,10 +1,7 @@
 #include "../include/MenuScene.hpp"
 #include "../include/ProtoScene.hpp"
 
-#include <UtH/Engine/UtHEngine.h>
-#include <UtH/Platform/Input.hpp>
-#include <UtH/Engine/Sprite.hpp>
-#include <UtH/Platform/Debug.hpp> //WriteLog(...), works like printf.
+#include <UtH/UtHEngine.hpp> //WriteLog(...), works like printf.
 
 using namespace uth;
 

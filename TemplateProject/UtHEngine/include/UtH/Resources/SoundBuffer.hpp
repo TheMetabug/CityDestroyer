@@ -10,11 +10,22 @@ namespace uth
 
     class SoundBuffer
     {
+    private:
+
+        struct Deleter
+        {
+            void operator()(SoundBuffer* file) const
+            {
+                delete file;
+            }
+        };
+
+        friend class ResourceManager;
+
         struct SoundStruct
         {
-            char *soundBuffer;
-			short bitsPerSample;
-			short channels;
+            short *soundBuffer;
+			int channels;
 			int frames;
 			DWORD sampleRate;
 
@@ -25,20 +36,18 @@ namespace uth
 
         } m_soundInfo;
 
-    public:
+    private:
 
         SoundBuffer();
 
-        SoundBuffer(const std::string& filePath);
-
         ~SoundBuffer();
-
 
         bool LoadFromFile(const std::string& filePath);
 
 
-        const SoundStruct& GetSoundInfo() const;
+    public:
 
+        const SoundStruct& GetSoundInfo() const;
     };
 }
 

@@ -1,14 +1,17 @@
 #pragma once
-#ifndef SoundDevice_H
-#define SoundDevice_H
+#ifndef SoundDevice_H_UTH
+#define SoundDevice_H_UTH
 
 #include <AL/al.h>
 #include <AL/alc.h>
 
+#include <UtH/Platform/Singleton.hpp>
+
 namespace uth
 {
-	class SoundDevice
+	class SoundDevice : public Singleton<SoundDevice>
 	{
+		friend class Singleton < SoundDevice > ;
 	public:
 		SoundDevice();
 		~SoundDevice();
@@ -16,12 +19,12 @@ namespace uth
 	private:
 		SoundDevice(const SoundDevice&);
 
-		static ALCdevice* device;
-		static ALCcontext* context;
+		 ALCdevice* device;
+		 ALCcontext* context;
 		
-		static bool initialized;
+		 bool initialized;
 
-		static void CreateContext();
+		 void CreateContext();
 	};
 }
 

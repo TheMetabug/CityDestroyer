@@ -1,4 +1,5 @@
 #include "../Matrix2.hpp"
+#include "../Trigonometry.hpp"
 
 #include <cassert>
 
@@ -171,6 +172,16 @@ namespace pmath
     {
         r1 *= right;
         r2 *= right;
+
+        return *this;
+    }
+
+    template<typename T>
+    inline Matrix2<T>& Matrix2<T>::operator *=(const Matrix2& right)
+    {
+        *this = *this * right;
+
+        return *this;
     }
 
     template<typename T>
@@ -201,20 +212,26 @@ namespace pmath
     {
         const T L[ROWS][COLUMNS] =
         {
-            (*this)[0][0],
-            (*this)[0][1],
-
-            (*this)[1][0],
-            (*this)[1][1]
+            {
+                (*this)[0][0],
+                (*this)[0][1]
+            },
+            {
+                (*this)[1][0],
+                (*this)[1][1]
+            }
         };
 
         const T R[ROWS][COLUMNS] =
         {
-            right[0][0],
-            right[0][1],
-
-            right[1][0],
-            right[1][1]
+            {
+                right[0][0],
+                right[0][1]
+            },
+            {
+                right[1][0],
+                right[1][1]
+            }
         };
 
         return Matrix2<T>

@@ -1,15 +1,17 @@
 #pragma once
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef DEBUG_H_UTH
+#define DEBUG_H_UTH
 
 #include <cstdarg>
 
-
-void WriteError(const char* text, ...);
-void WriteWarning(const char* text, ...);
-void WriteLog(const char* text, ...);
-void PrintGLString(const char* name, unsigned int s);
-void CheckGLError(const char* op);
-void CheckALError(const char* op);
+namespace uth
+{
+	void WriteError(const char* text, ...);
+	void WriteWarning(const char* text, ...);
+	void WriteLog(const char* text, ...);
+	void PrintGLString(const char* name, unsigned int s);
+	void CheckGLError(const char* op);
+	void CheckALError(const char* op);
+}
 
 #endif

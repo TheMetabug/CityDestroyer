@@ -39,9 +39,8 @@ private: // Just place everything else as private.
 	//uth::AnimatedSprite m_playerAnimation;
 	uth::SpriteBatch m_spriteBatch;
 
-	uth::Audio* m_music;
-	uth::Audio* m_stomp;
-	uth::SoundDevice* m_soundDevice;
+	uth::Sound* m_music;
+	uth::Sound* m_stomp;
 
 	std::array < uth::Transform, 80 > roadBlocks;
 

@@ -19,6 +19,9 @@ namespace uth
 	{
 	public:
 		GameObject();
+		GameObject(const std::string &name);
+        GameObject(const GameObject& other);
+        void operator =(const GameObject&) = delete;
 		virtual ~GameObject();
 
 		void SetActive(bool value);
@@ -27,6 +30,7 @@ namespace uth
 		void AddComponent(Component* component);
         template<typename T>
         T* GetComponent(const std::string& name);
+		const std::string GetName() const;
 		// Will actually delete the component
 		void RemoveComponent(Component* component);
 		void RemoveComponent(const std::string& name);
@@ -36,7 +40,7 @@ namespace uth
 		void Update(float dt);
 
 		// Transform is a special component that every gameobject has
-		Transform transform;
+		Transform& transform;
 
 		GameObject* parent;
 
@@ -45,6 +49,7 @@ namespace uth
         virtual void draw(RenderTarget& target);
 
 		std::vector<std::unique_ptr<Component>> components;
+		std::string m_name;
 
 		bool m_active;
 	};
@@ -57,7 +62,7 @@ namespace uth
         {
             if (components.at(i)->GetName() == name)
             {
-                return dynamic_cast<T*>(components[i].get());
+                return static_cast<T*>(components[i].get());
             }
         }
 

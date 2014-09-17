@@ -28,6 +28,9 @@
     <ClInclude Include="include\ProtoScene.hpp">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="include\Scenes.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\frontCity.tga" />

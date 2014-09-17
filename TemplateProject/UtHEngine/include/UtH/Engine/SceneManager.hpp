@@ -1,11 +1,10 @@
-#ifndef SCENEMANAGER_HPP_UTH
-#define SCENEMANAGER_HPP_UTH
+#ifndef SCENEMANAGER_H_UTH
+#define SCENEMANAGER_H_UTH
 
-#include "UtH/Engine/Scene.hpp"
+#include <UtH/Engine/Scene.hpp>
 #include <UtH/Platform/Singleton.hpp>
 
 #define uthSceneM uth::SceneManager::getInstance()
-#define UTHDefaultScene -1
 
 namespace uth
 {
@@ -15,21 +14,20 @@ namespace uth
 		SceneManager();
 		~SceneManager();
 	public:
-		void GoToScene(int SceneNumber);
-		void GoToScene(Scene* newScene);
+		void GoToScene(int SceneNumber, bool disposeCurrent = true);
 
 		bool Update(float dt);
 		bool Draw();
 
+		void DisposeScene(int SceneNumber);
 
-		void registerNewSceneFunc(void (*newSceneFunc)(int SceneID, Scene* &CurScene),int SceneCount);
-		
+		void registerNewSceneFunc(Scene* (*newSceneFunc)(int SceneID),int SceneCount);
 
 	private:
 		void endScene();
 		void startScene();
 		void m_switchScene();
-		void (*makeActiveScene)(int SceneID, Scene* &CurScene);
+		Scene* (*makeActiveScene)(int SceneID);
 
 		Scene* curScene;
 
