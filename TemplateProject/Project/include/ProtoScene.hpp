@@ -2,14 +2,7 @@
 #ifndef ProtoScene_HPP
 #define ProtoScene_HPP
 
-#include <UtH/Engine/Scene.hpp>
-#include <UtH/Engine/GameObject.hpp>
-#include <UtH/Engine/Sprite.hpp>
-#include <UtH/Engine/AnimatedSprite.hpp>
-#include <UtH/Core/Shader.hpp>
-#include <UtH/Renderer/Camera.hpp>
-#include <UtH/Engine/SpriteBatch.hpp>
-#include <UtH/Audio/Audio.hpp>
+#include <UtH/UtHEngine.hpp>
 
 #include <array>
 

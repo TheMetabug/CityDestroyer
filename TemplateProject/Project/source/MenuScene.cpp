@@ -1,7 +1,8 @@
-#include "../include/MenuScene.hpp"
-#include "../include/ProtoScene.hpp"
+#include <MenuScene.hpp>
+#include <ProtoScene.hpp>
 
-#include <UtH/UtHEngine.hpp> //WriteLog(...), works like printf.
+#include <UtH/UtHEngine.hpp> 
+//WriteLog(...), works like printf.
 
 using namespace uth;
 
@@ -31,7 +32,7 @@ bool MenuScene::DeInit()
 // Update loop. Gone trought once per frame.
 bool MenuScene::Update(float dt)
 {
-	if (uthInput.Keyboard.IsKeyDown(uth::Keyboard::Space) || uth::InputEvent::TAP)
+	if (uthInput.Keyboard.IsKeyDown(Keyboard::Space) || uthInput.Common.Event() == uth::InputEvent::TAP)
 	{
 		uthSceneM.GoToScene(1);
 		WriteLog("Start game...");
