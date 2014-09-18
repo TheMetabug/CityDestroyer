@@ -4,6 +4,7 @@
 
 #include <UtH\UtHEngine.hpp>
 #include <Player.hpp>
+#include <BackGroundManager.hpp>
 
 class GameScene : public uth::Scene
 {
@@ -12,6 +13,8 @@ private:
 	uth::Shader  m_shader;
 	uth::SpriteBatch m_spriteBatch;
 	uth::Camera* m_gameCamera;
+
+	//uth::ca
 
 	Player m_player;
 

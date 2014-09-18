@@ -83,6 +83,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\BackGround.cpp" />
+    <ClCompile Include="source\BackGroundManager.cpp" />
     <ClCompile Include="source\GameScene.cpp" />
     <ClCompile Include="source\MenuScene.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -90,6 +92,8 @@
     <ClCompile Include="source\ProtoScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\BackGround.hpp" />
+    <ClInclude Include="include\BackGroundManager.hpp" />
     <ClInclude Include="include\GameScene.hpp" />
     <ClInclude Include="include\MenuScene.hpp" />
     <ClInclude Include="include\Player.hpp" />

@@ -26,6 +26,12 @@
     <ClCompile Include="source\Player.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="source\BackGround.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BackGroundManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\MenuScene.hpp">
@@ -41,6 +47,12 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="include\Player.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BackGround.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BackGroundManager.hpp">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

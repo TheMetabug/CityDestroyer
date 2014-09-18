@@ -13,8 +13,6 @@ bool GameScene::Init()
 	//PUT INIT FUNCTIONS HERE
 
 
-
-
 	//END INIT FUNCTIONS
 	return true; // Init succeeded.
 }
