@@ -20,12 +20,18 @@
     <ClCompile Include="source\ProtoScene.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Heli.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\MenuScene.hpp">
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="include\ProtoScene.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Heli.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
