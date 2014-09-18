@@ -34,6 +34,7 @@ bool ProtoScene::Init()
 	carAirBorne = false;
 	carAirSpeed = 1000;
 
+	heliCurPos = pmath::Vec2f(200, -200);
 	heliSpawnX = 1000;
 	heliSpawnY = -200;
 	heliResetTime = 30;
@@ -77,9 +78,9 @@ bool ProtoScene::Init()
 
 
 	camLerpX = 0;
-	lerpSpeed = 5;
-	camLeftMost = -450;
-	camRightMost = 450;
+	lerpSpeed = 4;
+	camLeftMost = -400;
+	camRightMost = 400;
 	isLerpingRight = false;
 	isLerpingLeft = false;
 
@@ -226,7 +227,6 @@ bool ProtoScene::Update(float dt)
 	if (m_isCameraShaking)  shakeCamera(dt);
 	carMove(dt);
 	aeroplaneMove(dt);
-	heliMove(dt);
 	humanMove(dt);
 	tankMove(dt);
 	shochStartX = -m_player.transform.GetPosition().x;
@@ -499,19 +499,32 @@ void ProtoScene::aeroplaneMove(float dt)
 
 }
 
-void ProtoScene::heliMove(float dt)
+
+
+void ProtoScene::navigate(pmath::Vec2f targ, float dt)
+{
+	heliTargPos = targ;
+	heliLerp(targ, dt);
+}
+
+void ProtoScene::heliLerp(pmath::Vec2f targ,float dt)
+{
+	pmath::Vec2f heliDir = (heliTargPos - heliCurPos).normalize();
+	heliCurPos += heliSpeed * heliDir;
+}
+
+void ProtoScene::heliHover(float dt)
 {
 	heliTime += 3 * dt;
-	m_heli.transform.Move( - 60 * dt, 0 );
-	m_heli.transform.SetOrigin(pmath::Vec2(sin(heliTime), 0.7*cos(heliTime / 2)));
-
+	m_heli.transform.SetPosition(heliCurPos + pmath::Vec2f(sin(heliTime), cos(heliTime/2)));
 
 	if (heliResetClock >= heliResetTime)
 	{
 		heliReset();
 		heliResetTime = Randomizer::GetFloat(30, 60);
+		heliResetClock += dt;
 	}
-	heliResetClock += dt;
+
 
 }
 

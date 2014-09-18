@@ -45,13 +45,23 @@ private: // Just place everything else as private.
 
 	std::array < uth::Transform, 80 > roadBlocks;
 
+	pmath::Vec2f heliCurPos;
+	pmath::Vec2f heliTargPos;
+	pmath::Vec2f heliShootPos;
+
 	float roadY;
 	void heliMove(float dt);
+	void heliHover(float dt);
+	void heliLerp(pmath::Vec2f targ, float dt);
+	void navigate(pmath::Vec2f, float dt);
+
+	float heliSpeed;
 	void inputLogic(float dt);
 	void bgMovement(float dt);
 	float normIncrement;
 	float missileClock;
 	float homingSystem;
+
 
 	void heliReset();
 	void missilePath(float dt);
@@ -71,6 +81,7 @@ private: // Just place everything else as private.
 	float heliWaitClock;
 	float shochStartX;
 	float shockHeightMatcher;
+//	float heliSpeed;
 
 	bool shock;
 	float shockTime;
